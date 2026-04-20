@@ -8,6 +8,11 @@
   <link rel="stylesheet" href="design-kit copy/components.css">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+
   <style>
     * {
       margin: 0;
@@ -179,6 +184,155 @@
     .download-btn:hover {
       background: rgba(11, 130, 124, 1);
       transform: translateY(-2px);
+    }
+
+    .add-event-btn {
+      background: rgba(76, 175, 80, 0.9);
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 24px;
+      transition: all 0.3s ease;
+    }
+
+    .add-event-btn:hover {
+      background: rgba(76, 175, 80, 1);
+      transform: translateY(-2px);
+    }
+
+    .event-actions {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      display: none;
+      gap: 8px;
+    }
+
+    .edit-mode .event-actions {
+      display: flex;
+    }
+
+    .event-action-btn {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: white;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .event-action-btn:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .event-action-btn.delete:hover {
+      background: #f44336;
+      border-color: #f44336;
+    }
+
+    .modal-form {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .form-field {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .form-field label {
+      font-size: 13px;
+      font-weight: 600;
+      color: #0D9DDA;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .form-field input,
+    .form-field textarea,
+    .form-field select {
+      padding: 12px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 8px;
+      color: white;
+      font-size: 14px;
+      font-family: inherit;
+    }
+
+    .form-field textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+
+    .form-field input::placeholder,
+    .form-field textarea::placeholder {
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    .form-field select {
+      cursor: pointer;
+    }
+
+    .form-field select option {
+      background: #032D60;
+      color: white;
+    }
+
+    .form-actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .form-actions button {
+      flex: 1;
+      padding: 14px;
+      border: none;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 15px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .btn-save {
+      background: #0D9DDA;
+      color: white;
+    }
+
+    .btn-save:hover {
+      background: #0B827C;
+    }
+
+    .btn-cancel {
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .btn-cancel:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .loading {
+      text-align: center;
+      padding: 40px;
+      color: rgba(255, 255, 255, 0.7);
     }
 
     .stat {
@@ -1298,16 +1452,25 @@
     Enable Editing
   </button>
 
-  <!-- Download Button -->
-  <button class="download-btn" onclick="downloadHTML()">
-    <span class="material-icons" style="font-size:18px;">download</span>
-    Download HTML
-  </button>
-
-  <div class="save-notice" id="saveNotice">✓ Changes saved automatically</div>
+  <div class="save-notice" id="saveNotice">✓ Changes saved to database</div>
 
   <script>
+    // Firebase Configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyBXxvK8QqZ5L7HZYmN6wP3Jf9Rk5sT7uVw",
+      authDomain: "salesforce-social-calendar.firebaseapp.com",
+      projectId: "salesforce-social-calendar",
+      storageBucket: "salesforce-social-calendar.appspot.com",
+      messagingSenderId: "123456789012",
+      appId: "1:123456789012:web:abcdef123456"
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
     let editMode = false;
+    let eventsData = [];
 
     function toggleEditMode() {
       editMode = !editMode;
@@ -1322,15 +1485,10 @@
         // Enable all editable elements
         document.querySelectorAll('.editable').forEach(el => {
           el.contentEditable = 'true';
-          el.addEventListener('input', saveChanges);
         });
 
-        // Also make event cards editable
-        document.querySelectorAll('.event-title, .event-detail span:last-child').forEach(el => {
-          el.classList.add('editable');
-          el.contentEditable = 'true';
-          el.addEventListener('input', saveChanges);
-        });
+        // Re-render to show add/edit/delete buttons
+        renderEvents();
       } else {
         body.classList.remove('edit-mode');
         button.classList.remove('active');
@@ -1339,62 +1497,498 @@
         // Disable all editable elements
         document.querySelectorAll('.editable').forEach(el => {
           el.contentEditable = 'false';
-          el.removeEventListener('input', saveChanges);
         });
+
+        // Re-render to hide add/edit/delete buttons
+        renderEvents();
       }
     }
 
-    function saveChanges() {
-      // Show save notification
-      const notice = document.getElementById('saveNotice');
-      notice.classList.add('show');
 
-      // Save to localStorage
-      const pageContent = document.documentElement.innerHTML;
-      localStorage.setItem('socialCalendarContent', pageContent);
+    // Load events from Firestore on page load
+    window.addEventListener('DOMContentLoaded', async () => {
+      await loadEvents();
+      setupRealtimeListener();
+    });
 
-      setTimeout(() => {
-        notice.classList.remove('show');
-      }, 2000);
+    // Load events from Firestore
+    async function loadEvents() {
+      try {
+        const snapshot = await db.collection('events').orderBy('date').get();
+        eventsData = [];
+
+        snapshot.forEach(doc => {
+          eventsData.push({ id: doc.id, ...doc.data() });
+        });
+
+        // If no events, seed with default data
+        if (eventsData.length === 0) {
+          await seedDefaultEvents();
+        } else {
+          renderEvents();
+        }
+      } catch (error) {
+        console.error('Error loading events:', error);
+        // Fallback to default events
+        await seedDefaultEvents();
+      }
     }
 
-    function downloadHTML() {
-      // Get current page HTML
-      const html = document.documentElement.outerHTML;
+    // Setup real-time listener
+    function setupRealtimeListener() {
+      db.collection('events').onSnapshot(snapshot => {
+        eventsData = [];
+        snapshot.forEach(doc => {
+          eventsData.push({ id: doc.id, ...doc.data() });
+        });
+        renderEvents();
+      });
+    }
 
-      // Create a blob
-      const blob = new Blob([html], { type: 'text/html' });
+    // Seed default events
+    async function seedDefaultEvents() {
+      const defaultEvents = [
+        {
+          title: '🎊 EOQ Celebration',
+          month: 'May',
+          day: '12',
+          monthNum: 5,
+          date: '2026-05-12',
+          time: 'End of Day - 5:00 PM onwards',
+          location: 'Heron Tower / Nearby Venue',
+          description: 'End of Quarter celebration bringing together SE & AE teams. Partner funded event.',
+          budget: 'Partner Funded - Priority Event (~£30 per head)',
+          category: 'priority partner',
+          tags: ['Priority', 'Funded', 'End of Day']
+        },
+        {
+          title: '💪 Lunchtime Gym Classes',
+          month: 'June',
+          day: 'TBD',
+          monthNum: 6,
+          date: '2026-06-01',
+          time: 'Weekly - Lunch Hour',
+          location: 'One Rebel / Class Pass',
+          description: 'Regular wellness initiative offering lunchtime gym classes.',
+          budget: 'Exploring partnership models',
+          category: 'wellness social',
+          tags: ['Wellness', 'Recurring']
+        },
+        {
+          title: '☀️ Summer Sports Day',
+          month: 'July',
+          day: 'TBD',
+          monthNum: 7,
+          date: '2026-07-15',
+          time: 'Full Day Event',
+          location: 'Local Park near Heron Tower',
+          description: 'Full team sports day with games and BBQ.',
+          budget: 'Funding Requested - ~£30/head',
+          category: 'priority social',
+          tags: ['Priority', 'Outdoor', 'Full Team']
+        },
+        {
+          title: '⛳ Putt Shack Evening',
+          month: 'July',
+          day: 'TBD',
+          monthNum: 7,
+          date: '2026-07-20',
+          time: 'Evening - 6:00 PM',
+          location: 'Putt Shack - Central London',
+          description: 'Fun evening of mini golf with booze and non-booze options.',
+          budget: 'TBC - approximately £25-30 per person',
+          category: 'social',
+          tags: ['Social', 'Non-Booze Option']
+        },
+        {
+          title: '🎯 Shuffleboard Tournament',
+          month: 'August',
+          day: 'TBD',
+          monthNum: 8,
+          date: '2026-08-10',
+          time: 'Evening - 6:30 PM',
+          location: 'London Bridge Area',
+          description: 'Team shuffleboard tournament with prizes.',
+          budget: 'TBC - approximately £25-30 per person',
+          category: 'social',
+          tags: ['Social', 'Competition']
+        },
+        {
+          title: '👨‍🍳 Cooking Class',
+          month: 'August',
+          day: 'TBD',
+          monthNum: 8,
+          date: '2026-08-20',
+          time: 'Evening - 6:00 PM - 9:00 PM',
+          location: 'Central London Cooking School',
+          description: 'Hands-on cooking class where we cook together as teams.',
+          budget: 'TBC - approximately £40-50 per person',
+          category: 'social',
+          tags: ['Social', 'Hands-on']
+        },
+        {
+          title: '🍕 Build Your Own Pizza',
+          month: 'September',
+          day: 'TBD',
+          monthNum: 9,
+          date: '2026-09-15',
+          time: 'Lunch - 12:00 PM - 2:00 PM',
+          location: 'Heron Tower Office',
+          description: 'Interactive pizza-making session in the office.',
+          budget: 'TBC - approximately £15-20 per person',
+          category: 'social',
+          tags: ['Social', 'Office']
+        },
+        {
+          title: '👩‍🍳 Chef in Office on Ohana',
+          month: 'September',
+          day: 'TBD',
+          monthNum: 9,
+          date: '2026-09-25',
+          time: 'Lunch - 12:00 PM',
+          location: 'Heron Tower - Ohana Floor',
+          description: 'Exploring bringing a chef to cook special lunch on Ohana floor.',
+          budget: 'Exploring options - budget TBD',
+          category: 'social',
+          tags: ['Ohana', 'Office', 'Special']
+        },
+        {
+          title: '⛸️ Ice Skating at Natural History Museum',
+          month: 'December',
+          day: 'TBD',
+          monthNum: 12,
+          date: '2026-12-15',
+          time: 'Evening - 7:00 PM',
+          location: 'Natural History Museum',
+          description: 'Magical winter evening at iconic ice skating venue.',
+          budget: 'TBC - approximately £20-25 per person',
+          category: 'social',
+          tags: ['Social', 'Festive', 'Iconic']
+        }
+      ];
 
-      // Create download link
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'social-calendar-edited.html';
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
+      for (const event of defaultEvents) {
+        await db.collection('events').add(event);
+      }
 
-      // Show notification
+      await loadEvents();
+    }
+
+    // Render events on the page
+    function renderEvents() {
+      const timeline = document.getElementById('eventsTimeline');
+      timeline.innerHTML = '';
+
+      // Group by month
+      const byMonth = {};
+      eventsData.forEach(event => {
+        const monthName = event.month;
+        if (!byMonth[monthName]) {
+          byMonth[monthName] = [];
+        }
+        byMonth[monthName].push(event);
+      });
+
+      // Render each month
+      const months = ['April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+      months.forEach(month => {
+        const events = byMonth[month] || [];
+
+        const monthSection = `
+          <div class="timeline-month">
+            <div class="month-header">
+              <div class="month-dot"></div>
+              <h3 class="month-name">${month} 2026</h3>
+            </div>
+            <div class="events-grid">
+              ${editMode ? `<button class="add-event-btn" onclick="openAddEventModal('${month}')">
+                <span class="material-icons">add</span>
+                Add Event
+              </button>` : ''}
+              ${events.map(event => renderEventCard(event)).join('')}
+            </div>
+          </div>
+        `;
+
+        timeline.innerHTML += monthSection;
+      });
+    }
+
+    // Render individual event card
+    function renderEventCard(event) {
+      return `
+        <div class="event-card" data-category="${event.category}" onclick="openEvent('${event.id}')">
+          <div class="event-actions">
+            <button class="event-action-btn" onclick="event.stopPropagation(); editEvent('${event.id}')">
+              <span class="material-icons" style="font-size:18px;">edit</span>
+            </button>
+            <button class="event-action-btn delete" onclick="event.stopPropagation(); deleteEvent('${event.id}')">
+              <span class="material-icons" style="font-size:18px;">delete</span>
+            </button>
+          </div>
+          <div class="event-header">
+            <div class="event-date">
+              <div class="event-day">${event.day}</div>
+              <div class="event-month">${event.month.substring(0, 3).toUpperCase()}</div>
+            </div>
+            <div class="event-info">
+              <div class="event-title">${event.title}</div>
+              <div class="event-tags">
+                ${event.tags.map(tag => {
+                  const tagClass = tag.toLowerCase() === 'priority' ? 'priority' : tag.toLowerCase() === 'funded' ? 'funded' : '';
+                  return `<span class="event-tag ${tagClass}">${tag}</span>`;
+                }).join('')}
+              </div>
+            </div>
+          </div>
+          <div class="event-details">
+            <div class="event-detail">
+              <span class="material-icons">schedule</span>
+              <span>${event.time}</span>
+            </div>
+            <div class="event-detail">
+              <span class="material-icons">place</span>
+              <span>${event.location}</span>
+            </div>
+            <div class="event-detail">
+              <span class="material-icons">payments</span>
+              <span>${event.budget}</span>
+            </div>
+          </div>
+          <div class="event-footer">
+            <div class="event-attendees">
+              <div class="attendee-avatars">
+                <div class="attendee-avatar">?</div>
+              </div>
+              <span>RSVP to join</span>
+            </div>
+            <button class="rsvp-btn" onclick="event.stopPropagation(); rsvp(this)">RSVP</button>
+          </div>
+        </div>
+      `;
+    }
+
+    // Add new event
+    function openAddEventModal(month) {
+      const modal = document.getElementById('eventModal');
+      const modalContent = modal.querySelector('.modal-content');
+
+      modalContent.innerHTML = `
+        <button class="modal-close" onclick="closeModal()">×</button>
+        <h3 class="modal-title">Add New Event</h3>
+        <form class="modal-form" onsubmit="saveNewEvent(event, '${month}')">
+          <div class="form-field">
+            <label>Event Title (include emoji)</label>
+            <input type="text" id="eventTitle" required placeholder="🎉 My Event Name">
+          </div>
+          <div class="form-field">
+            <label>Month</label>
+            <select id="eventMonth" required>
+              <option value="April">April</option>
+              <option value="May">May</option>
+              <option value="June">June</option>
+              <option value="July" ${month === 'July' ? 'selected' : ''}>July</option>
+              <option value="August">August</option>
+              <option value="September">September</option>
+              <option value="October">October</option>
+              <option value="November">November</option>
+              <option value="December">December</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label>Day</label>
+            <input type="text" id="eventDay" required placeholder="15 or TBD">
+          </div>
+          <div class="form-field">
+            <label>Time</label>
+            <input type="text" id="eventTime" required placeholder="6:00 PM - 9:00 PM">
+          </div>
+          <div class="form-field">
+            <label>Location</label>
+            <input type="text" id="eventLocation" required placeholder="Heron Tower">
+          </div>
+          <div class="form-field">
+            <label>Description</label>
+            <textarea id="eventDescription" required></textarea>
+          </div>
+          <div class="form-field">
+            <label>Budget</label>
+            <input type="text" id="eventBudget" required placeholder="£30 per person">
+          </div>
+          <div class="form-field">
+            <label>Category</label>
+            <input type="text" id="eventCategory" required placeholder="social, priority, wellness">
+          </div>
+          <div class="form-field">
+            <label>Tags (comma separated)</label>
+            <input type="text" id="eventTags" required placeholder="Social, Fun, Team">
+          </div>
+          <div class="form-actions">
+            <button type="button" class="btn-cancel" onclick="closeModal()">Cancel</button>
+            <button type="submit" class="btn-save">Add Event</button>
+          </div>
+        </form>
+      `;
+
+      modal.classList.add('active');
+    }
+
+    // Save new event
+    async function saveNewEvent(e, defaultMonth) {
+      e.preventDefault();
+
+      const monthNum = {
+        'April': 4, 'May': 5, 'June': 6, 'July': 7, 'August': 8,
+        'September': 9, 'October': 10, 'November': 11, 'December': 12
+      };
+
+      const month = document.getElementById('eventMonth').value;
+      const day = document.getElementById('eventDay').value;
+
+      const newEvent = {
+        title: document.getElementById('eventTitle').value,
+        month: month,
+        day: day,
+        monthNum: monthNum[month],
+        date: `2026-${String(monthNum[month]).padStart(2, '0')}-${day === 'TBD' ? '01' : String(day).padStart(2, '0')}`,
+        time: document.getElementById('eventTime').value,
+        location: document.getElementById('eventLocation').value,
+        description: document.getElementById('eventDescription').value,
+        budget: document.getElementById('eventBudget').value,
+        category: document.getElementById('eventCategory').value,
+        tags: document.getElementById('eventTags').value.split(',').map(t => t.trim())
+      };
+
+      try {
+        await db.collection('events').add(newEvent);
+        closeModal();
+        showNotification('Event added successfully!');
+      } catch (error) {
+        console.error('Error adding event:', error);
+        alert('Failed to add event. Please try again.');
+      }
+    }
+
+    // Edit event
+    async function editEvent(eventId) {
+      const event = eventsData.find(e => e.id === eventId);
+      if (!event) return;
+
+      const modal = document.getElementById('eventModal');
+      const modalContent = modal.querySelector('.modal-content');
+
+      modalContent.innerHTML = `
+        <button class="modal-close" onclick="closeModal()">×</button>
+        <h3 class="modal-title">Edit Event</h3>
+        <form class="modal-form" onsubmit="updateEvent(event, '${eventId}')">
+          <div class="form-field">
+            <label>Event Title</label>
+            <input type="text" id="eventTitle" required value="${event.title}">
+          </div>
+          <div class="form-field">
+            <label>Month</label>
+            <select id="eventMonth" required>
+              ${['April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'].map(m =>
+                `<option value="${m}" ${m === event.month ? 'selected' : ''}>${m}</option>`
+              ).join('')}
+            </select>
+          </div>
+          <div class="form-field">
+            <label>Day</label>
+            <input type="text" id="eventDay" required value="${event.day}">
+          </div>
+          <div class="form-field">
+            <label>Time</label>
+            <input type="text" id="eventTime" required value="${event.time}">
+          </div>
+          <div class="form-field">
+            <label>Location</label>
+            <input type="text" id="eventLocation" required value="${event.location}">
+          </div>
+          <div class="form-field">
+            <label>Description</label>
+            <textarea id="eventDescription" required>${event.description}</textarea>
+          </div>
+          <div class="form-field">
+            <label>Budget</label>
+            <input type="text" id="eventBudget" required value="${event.budget}">
+          </div>
+          <div class="form-field">
+            <label>Category</label>
+            <input type="text" id="eventCategory" required value="${event.category}">
+          </div>
+          <div class="form-field">
+            <label>Tags (comma separated)</label>
+            <input type="text" id="eventTags" required value="${event.tags.join(', ')}">
+          </div>
+          <div class="form-actions">
+            <button type="button" class="btn-cancel" onclick="closeModal()">Cancel</button>
+            <button type="submit" class="btn-save">Save Changes</button>
+          </div>
+        </form>
+      `;
+
+      modal.classList.add('active');
+    }
+
+    // Update event
+    async function updateEvent(e, eventId) {
+      e.preventDefault();
+
+      const monthNum = {
+        'April': 4, 'May': 5, 'June': 6, 'July': 7, 'August': 8,
+        'September': 9, 'October': 10, 'November': 11, 'December': 12
+      };
+
+      const month = document.getElementById('eventMonth').value;
+      const day = document.getElementById('eventDay').value;
+
+      const updatedEvent = {
+        title: document.getElementById('eventTitle').value,
+        month: month,
+        day: day,
+        monthNum: monthNum[month],
+        date: `2026-${String(monthNum[month]).padStart(2, '0')}-${day === 'TBD' ? '01' : String(day).padStart(2, '0')}`,
+        time: document.getElementById('eventTime').value,
+        location: document.getElementById('eventLocation').value,
+        description: document.getElementById('eventDescription').value,
+        budget: document.getElementById('eventBudget').value,
+        category: document.getElementById('eventCategory').value,
+        tags: document.getElementById('eventTags').value.split(',').map(t => t.trim())
+      };
+
+      try {
+        await db.collection('events').doc(eventId).update(updatedEvent);
+        closeModal();
+        showNotification('Event updated successfully!');
+      } catch (error) {
+        console.error('Error updating event:', error);
+        alert('Failed to update event. Please try again.');
+      }
+    }
+
+    // Delete event
+    async function deleteEvent(eventId) {
+      if (!confirm('Are you sure you want to delete this event?')) return;
+
+      try {
+        await db.collection('events').doc(eventId).delete();
+        showNotification('Event deleted successfully!');
+      } catch (error) {
+        console.error('Error deleting event:', error);
+        alert('Failed to delete event. Please try again.');
+      }
+    }
+
+    function showNotification(message) {
       const notice = document.getElementById('saveNotice');
-      notice.textContent = '✓ HTML file downloaded!';
+      notice.textContent = `✓ ${message}`;
       notice.classList.add('show');
       setTimeout(() => {
         notice.classList.remove('show');
         notice.textContent = '✓ Changes saved automatically';
       }, 3000);
     }
-
-    // Load saved content on page load
-    window.addEventListener('DOMContentLoaded', () => {
-      const saved = localStorage.getItem('socialCalendarContent');
-      if (saved) {
-        // Only restore if user wants to
-        if (confirm('Restore your previous edits?')) {
-          document.documentElement.innerHTML = saved;
-        }
-      }
-    });
 
     const events = {
       'eoq-celebration': {
@@ -1501,16 +2095,44 @@
     }
 
     function openEvent(eventId) {
-      const event = events[eventId];
+      const event = eventsData.find(e => e.id === eventId);
       if (!event) return;
 
-      document.getElementById('modalTitle').textContent = event.title;
-      document.getElementById('modalDateTime').textContent = event.dateTime;
-      document.getElementById('modalLocation').textContent = event.location;
-      document.getElementById('modalDescription').textContent = event.description;
-      document.getElementById('modalBudget').textContent = event.budget;
+      const modal = document.getElementById('eventModal');
+      const modalContent = modal.querySelector('.modal-content');
 
-      document.getElementById('eventModal').classList.add('active');
+      modalContent.innerHTML = `
+        <button class="modal-close" onclick="closeModal()">×</button>
+        <h3 class="modal-title">${event.title}</h3>
+
+        <div class="modal-section">
+          <h4>📅 Date & Time</h4>
+          <p>${event.month} ${event.day}, 2026 - ${event.time}</p>
+        </div>
+
+        <div class="modal-section">
+          <h4>📍 Location</h4>
+          <p>${event.location}</p>
+        </div>
+
+        <div class="modal-section">
+          <h4>ℹ️ About This Event</h4>
+          <p>${event.description}</p>
+        </div>
+
+        <div class="modal-section">
+          <h4>💰 Budget</h4>
+          <p>${event.budget}</p>
+        </div>
+
+        <div class="rsvp-form">
+          <input type="text" placeholder="Your Name" id="rsvpName">
+          <input type="email" placeholder="Your Email" id="rsvpEmail">
+          <button onclick="submitRSVP()">Confirm RSVP</button>
+        </div>
+      `;
+
+      modal.classList.add('active');
     }
 
     function closeModal() {
