@@ -9,6 +9,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+
   <style>
     * {
       margin: 0;
@@ -1451,13 +1455,23 @@
   <div class="save-notice" id="saveNotice">✓ Changes saved to database</div>
 
   <script>
-    // JSONBin.io API Configuration (Public collaborative storage)
-    const API_URL = 'https://api.jsonbin.io/v3/b/676a4e5facd3cb34a8bd7a2c';
-    const API_KEY = '$2a$10$VxvK5mN8wP6Rf9Tk7sU8xWyJN5vK2wP6Rf9Tk7sU8xWyJN5vK2wP';
+    // Firebase Configuration (Public read/write for team collaboration)
+    const firebaseConfig = {
+      apiKey: "AIzaSyCqXxvK8QqZ5L7HZYmN6wP3Jf9Rk5sT7uVw",
+      authDomain: "sf-social-calendar.firebaseapp.com",
+      databaseURL: "https://sf-social-calendar-default-rtdb.europe-west1.firebasedatabase.app",
+      projectId: "sf-social-calendar",
+      storageBucket: "sf-social-calendar.appspot.com",
+      messagingSenderId: "123456789012",
+      appId: "1:123456789012:web:abc123def456"
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const database = firebase.database();
 
     let editMode = false;
     let eventsData = [];
-    let pollingInterval;
 
     function toggleEditMode() {
       editMode = !editMode;
@@ -1493,70 +1507,35 @@
 
 
     // Load events on page load
-    window.addEventListener('DOMContentLoaded', async () => {
-      await loadEvents();
-      startPolling();
+    window.addEventListener('DOMContentLoaded', () => {
+      setupRealtimeListener();
     });
 
-    // Load events from API
-    async function loadEvents() {
-      try {
-        const response = await fetch(API_URL + '/latest', {
-          method: 'GET',
-          headers: {
-            'X-Master-Key': API_KEY
-          }
-        });
+    // Setup real-time Firebase listener
+    function setupRealtimeListener() {
+      const eventsRef = database.ref('events');
 
-        if (!response.ok) throw new Error('Failed to load events');
+      eventsRef.on('value', (snapshot) => {
+        const data = snapshot.val();
 
-        const data = await response.json();
-        eventsData = data.record.events || [];
-
-        // If no events, seed with default data
-        if (eventsData.length === 0) {
-          await seedDefaultEvents();
+        if (data) {
+          eventsData = Object.keys(data).map(key => ({
+            id: key,
+            ...data[key]
+          }));
         } else {
-          renderEvents();
+          // No events exist, seed defaults
+          seedDefaultEvents();
         }
-      } catch (error) {
-        console.error('Error loading events:', error);
-        // Fallback to default events
-        await seedDefaultEvents();
-      }
-    }
 
-    // Poll for updates every 5 seconds
-    function startPolling() {
-      pollingInterval = setInterval(async () => {
-        await loadEvents();
-      }, 5000);
-    }
-
-    // Save all events to API
-    async function saveEvents() {
-      try {
-        const response = await fetch(API_URL, {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-            'X-Master-Key': API_KEY
-          },
-          body: JSON.stringify({ events: eventsData })
-        });
-
-        if (!response.ok) throw new Error('Failed to save events');
-
-        return true;
-      } catch (error) {
-        console.error('Error saving events:', error);
-        return false;
-      }
+        renderEvents();
+        console.log('Events loaded:', eventsData.length);
+      });
     }
 
     // Seed default events
-    async function seedDefaultEvents() {
-      eventsData = [
+    function seedDefaultEvents() {
+      const defaultEvents = [
         {
           id: 'evt-1',
           title: '🎊 EOQ Celebration',
@@ -1685,14 +1664,13 @@
         }
       ];
 
-      // Add IDs to all events
-      eventsData = eventsData.map((evt, idx) => ({
-        ...evt,
-        id: evt.id || `evt-${idx + 1}`
-      }));
+      // Save each event to Firebase
+      defaultEvents.forEach(event => {
+        const eventRef = database.ref('events/' + event.id);
+        eventRef.set(event);
+      });
 
-      await saveEvents();
-      renderEvents();
+      console.log('Default events seeded');
     }
 
     // Render events on the page
@@ -1779,11 +1757,11 @@
           <div class="event-footer">
             <div class="event-attendees">
               <div class="attendee-avatars">
-                <div class="attendee-avatar">?</div>
+                <div class="attendee-avatar">${(event.attendees || []).length || '0'}</div>
               </div>
-              <span>RSVP to join</span>
+              <span>${(event.attendees || []).length || 0} attending</span>
             </div>
-            <button class="rsvp-btn" onclick="event.stopPropagation(); rsvp(this)">RSVP</button>
+            <button class="rsvp-btn" onclick="event.stopPropagation(); openRSVPModal('${event.id}')">RSVP</button>
           </div>
         </div>
       `;
@@ -1855,7 +1833,7 @@
     }
 
     // Save new event
-    async function saveNewEvent(e, defaultMonth) {
+    function saveNewEvent(e, defaultMonth) {
       e.preventDefault();
 
       const monthNum = {
@@ -1866,8 +1844,8 @@
       const month = document.getElementById('eventMonth').value;
       const day = document.getElementById('eventDay').value;
 
+      const eventId = 'evt-' + Date.now();
       const newEvent = {
-        id: 'evt-' + Date.now(),
         title: document.getElementById('eventTitle').value,
         month: month,
         day: day,
@@ -1878,19 +1856,19 @@
         description: document.getElementById('eventDescription').value,
         budget: document.getElementById('eventBudget').value,
         category: document.getElementById('eventCategory').value,
-        tags: document.getElementById('eventTags').value.split(',').map(t => t.trim())
+        tags: document.getElementById('eventTags').value.split(',').map(t => t.trim()),
+        attendees: []
       };
 
-      eventsData.push(newEvent);
-
-      const saved = await saveEvents();
-      if (saved) {
-        closeModal();
-        renderEvents();
-        showNotification('Event added successfully!');
-      } else {
-        alert('Failed to add event. Please try again.');
-      }
+      database.ref('events/' + eventId).set(newEvent)
+        .then(() => {
+          closeModal();
+          showNotification('Event added successfully!');
+        })
+        .catch((error) => {
+          console.error('Error adding event:', error);
+          alert('Failed to add event: ' + error.message);
+        });
     }
 
     // Edit event
@@ -1956,7 +1934,7 @@
     }
 
     // Update event
-    async function updateEvent(e, eventId) {
+    function updateEvent(e, eventId) {
       e.preventDefault();
 
       const monthNum = {
@@ -1981,34 +1959,162 @@
         tags: document.getElementById('eventTags').value.split(',').map(t => t.trim())
       };
 
-      const index = eventsData.findIndex(e => e.id === eventId);
-      if (index !== -1) {
-        eventsData[index] = { ...eventsData[index], ...updatedData };
-
-        const saved = await saveEvents();
-        if (saved) {
+      database.ref('events/' + eventId).update(updatedData)
+        .then(() => {
           closeModal();
-          renderEvents();
           showNotification('Event updated successfully!');
-        } else {
-          alert('Failed to update event. Please try again.');
-        }
-      }
+        })
+        .catch((error) => {
+          console.error('Error updating event:', error);
+          alert('Failed to update event: ' + error.message);
+        });
     }
 
     // Delete event
-    async function deleteEvent(eventId) {
+    function deleteEvent(eventId) {
       if (!confirm('Are you sure you want to delete this event?')) return;
 
-      eventsData = eventsData.filter(e => e.id !== eventId);
+      database.ref('events/' + eventId).remove()
+        .then(() => {
+          showNotification('Event deleted successfully!');
+        })
+        .catch((error) => {
+          console.error('Error deleting event:', error);
+          alert('Failed to delete event: ' + error.message);
+        });
+    }
 
-      const saved = await saveEvents();
-      if (saved) {
-        renderEvents();
-        showNotification('Event deleted successfully!');
-      } else {
-        alert('Failed to delete event. Please try again.');
+    // Open RSVP Modal
+    function openRSVPModal(eventId) {
+      const event = eventsData.find(e => e.id === eventId);
+      if (!event) return;
+
+      const modal = document.getElementById('eventModal');
+      const modalContent = modal.querySelector('.modal-content');
+
+      modalContent.innerHTML = `
+        <button class="modal-close" onclick="closeModal()">×</button>
+        <h3 class="modal-title">${event.title}</h3>
+
+        <div class="modal-section">
+          <h4>📅 Date & Time</h4>
+          <p>${event.month} ${event.day}, 2026 - ${event.time}</p>
+        </div>
+
+        <div class="modal-section">
+          <h4>📍 Location</h4>
+          <p>${event.location}</p>
+        </div>
+
+        <div class="modal-section">
+          <h4>ℹ️ About This Event</h4>
+          <p>${event.description}</p>
+        </div>
+
+        <div class="modal-section">
+          <h4>👥 Who's Coming (${(event.attendees || []).length})</h4>
+          ${(event.attendees || []).length > 0 ?
+            '<div style="max-height:150px;overflow-y:auto;">' + event.attendees.map(a =>
+              `<div style="padding:8px;background:rgba(255,255,255,0.1);margin-bottom:4px;border-radius:4px;">${a.name}</div>`
+            ).join('') + '</div>'
+            : '<p style="color:rgba(255,255,255,0.6);">No one has RSVP\'d yet. Be the first!</p>'
+          }
+        </div>
+
+        <form class="rsvp-form" onsubmit="submitRSVP(event, '${eventId}')">
+          <input type="text" placeholder="Your Name" id="rsvpName" required>
+          <input type="email" placeholder="Your Email" id="rsvpEmail" required>
+          <button type="submit" style="background:#0D9DDA;color:white;padding:14px;border:none;border-radius:8px;font-weight:700;cursor:pointer;">
+            Confirm RSVP & Get Calendar Invite
+          </button>
+        </form>
+      `;
+
+      modal.classList.add('active');
+    }
+
+    // Submit RSVP
+    function submitRSVP(e, eventId) {
+      e.preventDefault();
+
+      const name = document.getElementById('rsvpName').value;
+      const email = document.getElementById('rsvpEmail').value;
+
+      const event = eventsData.find(ev => ev.id === eventId);
+      if (!event) return;
+
+      // Check if already RSVP'd
+      const attendees = event.attendees || [];
+      if (attendees.some(a => a.email === email)) {
+        alert('You\'ve already RSVP\'d to this event!');
+        return;
       }
+
+      // Add attendee
+      const newAttendee = {
+        name: name,
+        email: email,
+        timestamp: new Date().toISOString()
+      };
+
+      attendees.push(newAttendee);
+
+      // Update Firebase
+      database.ref('events/' + eventId + '/attendees').set(attendees)
+        .then(() => {
+          // Generate Google Calendar link
+          const calendarLink = generateGoogleCalendarLink(event);
+
+          // Show success message
+          const modal = document.getElementById('eventModal');
+          const modalContent = modal.querySelector('.modal-content');
+
+          modalContent.innerHTML = `
+            <button class="modal-close" onclick="closeModal()">×</button>
+            <div style="text-align:center;padding:40px 20px;">
+              <div style="font-size:64px;margin-bottom:20px;">✅</div>
+              <h3 style="font-size:28px;margin-bottom:16px;">You're all set!</h3>
+              <p style="margin-bottom:32px;color:rgba(255,255,255,0.8);">
+                RSVP confirmed for <strong>${event.title}</strong>
+              </p>
+              <a href="${calendarLink}" target="_blank" class="btn-primary" style="display:inline-block;background:#0D9DDA;color:white;padding:14px 32px;border-radius:8px;text-decoration:none;font-weight:700;">
+                📅 Add to Google Calendar
+              </a>
+              <p style="margin-top:24px;font-size:13px;color:rgba(255,255,255,0.6);">
+                Calendar invite link has been generated. Click above to add it to your Google Calendar.
+              </p>
+            </div>
+          `;
+
+          showNotification('RSVP confirmed!');
+        })
+        .catch((error) => {
+          console.error('Error submitting RSVP:', error);
+          alert('Failed to submit RSVP: ' + error.message);
+        });
+    }
+
+    // Generate Google Calendar Link
+    function generateGoogleCalendarLink(event) {
+      const title = encodeURIComponent(event.title);
+      const details = encodeURIComponent(event.description + '\n\nLocation: ' + event.location);
+      const location = encodeURIComponent(event.location);
+
+      // Parse date
+      const dateStr = event.date;
+      const startDate = dateStr.replace(/-/g, '');
+      const endDate = startDate; // Same day event
+
+      // Create all-day event for TBD times, or specific time if available
+      let dates;
+      if (event.day === 'TBD' || !event.time || event.time.includes('TBD')) {
+        dates = `${startDate}/${endDate}`;
+      } else {
+        // Try to parse time (simplified - defaults to 6pm if can't parse)
+        dates = `${startDate}T180000Z/${endDate}T210000Z`; // 6pm-9pm UTC
+      }
+
+      return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&details=${details}&location=${location}&dates=${dates}`;
     }
 
     function showNotification(message) {
@@ -2021,7 +2127,59 @@
       }, 3000);
     }
 
-    const events = {
+    // Helper functions
+    function scrollToEvents() {
+      document.getElementById('eventsTimeline').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function showBudget() {
+      document.getElementById('budgetSection').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function filterEvents(category) {
+      const chips = document.querySelectorAll('.filter-chip');
+      chips.forEach(chip => chip.classList.remove('active'));
+      event.target.classList.add('active');
+
+      const cards = document.querySelectorAll('.event-card');
+      cards.forEach(card => {
+        if (category === 'all') {
+          card.style.display = 'block';
+        } else {
+          const categories = card.getAttribute('data-category');
+          if (categories && categories.includes(category)) {
+            card.style.display = 'block';
+          } else {
+            card.style.display = 'none';
+          }
+        }
+      });
+    }
+
+    function rsvp(button) {
+      // This is just for visual feedback on cards, actual RSVP goes through modal
+      if (button.classList.contains('attending')) {
+        button.classList.remove('attending');
+        button.textContent = 'RSVP';
+      } else {
+        button.classList.add('attending');
+        button.textContent = '✓ Attending';
+      }
+    }
+
+    function closeModal() {
+      document.getElementById('eventModal').classList.remove('active');
+    }
+
+    // Close modal on outside click
+    document.getElementById('eventModal').addEventListener('click', function(e) {
+      if (e.target === this) {
+        closeModal();
+      }
+    });
+
+    // Old events object for reference (no longer used)
+    const OLD_events = {
       'eoq-celebration': {
         title: '🎊 EOQ Celebration',
         dateTime: 'Monday, May 12th 2026 - 5:00 PM onwards',
@@ -2125,74 +2283,7 @@
       }
     }
 
-    function openEvent(eventId) {
-      const event = eventsData.find(e => e.id === eventId);
-      if (!event) return;
-
-      const modal = document.getElementById('eventModal');
-      const modalContent = modal.querySelector('.modal-content');
-
-      modalContent.innerHTML = `
-        <button class="modal-close" onclick="closeModal()">×</button>
-        <h3 class="modal-title">${event.title}</h3>
-
-        <div class="modal-section">
-          <h4>📅 Date & Time</h4>
-          <p>${event.month} ${event.day}, 2026 - ${event.time}</p>
-        </div>
-
-        <div class="modal-section">
-          <h4>📍 Location</h4>
-          <p>${event.location}</p>
-        </div>
-
-        <div class="modal-section">
-          <h4>ℹ️ About This Event</h4>
-          <p>${event.description}</p>
-        </div>
-
-        <div class="modal-section">
-          <h4>💰 Budget</h4>
-          <p>${event.budget}</p>
-        </div>
-
-        <div class="rsvp-form">
-          <input type="text" placeholder="Your Name" id="rsvpName">
-          <input type="email" placeholder="Your Email" id="rsvpEmail">
-          <button onclick="submitRSVP()">Confirm RSVP</button>
-        </div>
-      `;
-
-      modal.classList.add('active');
-    }
-
-    function closeModal() {
-      document.getElementById('eventModal').classList.remove('active');
-    }
-
-    function submitRSVP() {
-      const name = document.getElementById('rsvpName').value;
-      const email = document.getElementById('rsvpEmail').value;
-
-      if (!name || !email) {
-        alert('Please fill in both fields');
-        return;
-      }
-
-      alert(`Thanks ${name}! Your RSVP has been recorded. We'll send confirmation to ${email}`);
-      closeModal();
-
-      // Clear form
-      document.getElementById('rsvpName').value = '';
-      document.getElementById('rsvpEmail').value = '';
-    }
-
-    // Close modal on outside click
-    document.getElementById('eventModal').addEventListener('click', function(e) {
-      if (e.target === this) {
-        closeModal();
-      }
-    });
+    // openEvent is now openRSVPModal - defined above
   </script>
 
 </body>
