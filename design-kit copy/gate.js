@@ -16,7 +16,7 @@
   var C = {
     password:   (_scriptTag && _scriptTag.dataset.password) ? _scriptTag.dataset.password : 'SFNBA2026!',
     workerUrl:  '',  // Optional: Set up Cloudflare Worker for GitHub logging
-    web3Key:    'ec698e10-6e6a-4c3a-974e-54a7cd7d4343',  // Email alerts via Web3Forms
+    web3Key:    'c26bd390-636f-495f-badb-32368933429c',  // Your Web3Forms key
     storeKey:   'sf_visitor_v1',
     authKey:    'sf_auth_v1'
   };
