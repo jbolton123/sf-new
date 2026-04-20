@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Peacocks AI Style Assistant</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --peacocks-navy: #1A2B4A;
+      --peacocks-blue: #2B4768;
+      --peacocks-teal: #0B9DDA;
+      --peacocks-gold: #D4AF37;
+      --white: #FFFFFF;
+      --off-white: #F5F8FA;
+      --gray-100: #EEF2F7;
+      --gray-500: #7A8A9A;
+      --gray-700: #3E4D5C;
+      --text: #032D60;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--off-white);
+      color: var(--gray-700);
+      line-height: 1.6;
+    }
+
+    /* Landing Page */
+    .landing {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .nav {
+      background: var(--peacocks-navy);
+      padding: 16px 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: white;
+    }
+
+    .nav-brand {
+      font-size: 24px;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+    }
+
+    .nav-user {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 14px;
+    }
+
+    .badge {
+      background: var(--peacocks-gold);
+      color: var(--peacocks-navy);
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 12px;
+    }
+
+    .hero {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 80px 32px;
+      background: linear-gradient(135deg, var(--peacocks-navy) 0%, var(--peacocks-blue) 100%);
+      color: white;
+    }
+
+    .hero h1 {
+      font-size: 56px;
+      font-weight: 800;
+      margin-bottom: 24px;
+      line-height: 1.1;
+    }
+
+    .hero p {
+      font-size: 20px;
+      margin-bottom: 40px;
+      opacity: 0.9;
+      max-width: 600px;
+    }
+
+    .cta-btn {
+      background: var(--peacocks-teal);
+      color: white;
+      padding: 18px 40px;
+      border-radius: 12px;
+      border: none;
+      font-size: 18px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .cta-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(13, 157, 218, 0.4);
+    }
+
+    /* Chat Interface */
+    .chat-app {
+      display: none;
+      height: 100vh;
+      flex-direction: column;
+    }
+
+    .chat-app.active {
+      display: flex;
+    }
+
+    .chat-header {
+      background: var(--peacocks-navy);
+      color: white;
+      padding: 16px 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .chat-body {
+      flex: 1;
+      display: flex;
+      overflow: hidden;
+    }
+
+    .chat-panel {
+      width: 35%;
+      display: flex;
+      flex-direction: column;
+      border-right: 1px solid var(--gray-100);
+      background: white;
+    }
+
+    .messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .message {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      max-width: 80%;
+    }
+
+    .message.user {
+      align-self: flex-end;
+      align-items: flex-end;
+    }
+
+    .message.agent {
+      align-self: flex-start;
+    }
+
+    .message-bubble {
+      padding: 12px 16px;
+      border-radius: 16px;
+      font-size: 15px;
+    }
+
+    .message.user .message-bubble {
+      background: var(--peacocks-teal);
+      color: white;
+    }
+
+    .message.agent .message-bubble {
+      background: var(--gray-100);
+      color: var(--gray-700);
+    }
+
+    .message-time {
+      font-size: 11px;
+      color: var(--gray-500);
+      padding: 0 4px;
+    }
+
+    .chips {
+      padding: 16px 24px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      border-top: 1px solid var(--gray-100);
+    }
+
+    .chip {
+      background: white;
+      border: 1px solid var(--peacocks-teal);
+      color: var(--peacocks-teal);
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .chip:hover {
+      background: var(--peacocks-teal);
+      color: white;
+    }
+
+    .chat-input {
+      padding: 16px 24px;
+      border-top: 1px solid var(--gray-100);
+      display: flex;
+      gap: 12px;
+    }
+
+    .chat-input input {
+      flex: 1;
+      padding: 12px 16px;
+      border: 1px solid var(--gray-100);
+      border-radius: 24px;
+      font-size: 15px;
+      outline: none;
+      font-family: inherit;
+    }
+
+    .chat-input input:focus {
+      border-color: var(--peacocks-teal);
+    }
+
+    .send-btn {
+      background: var(--peacocks-teal);
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 24px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    /* Content Panel */
+    .content-panel {
+      width: 65%;
+      overflow-y: auto;
+      padding: 32px;
+      background: var(--off-white);
+    }
+
+    .category-header {
+      margin-bottom: 32px;
+    }
+
+    .category-header h2 {
+      font-size: 32px;
+      font-weight: 800;
+      color: var(--peacocks-navy);
+      margin-bottom: 8px;
+    }
+
+    .category-header p {
+      color: var(--gray-500);
+      font-size: 16px;
+    }
+
+    .items-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 24px;
+    }
+
+    .item-card {
+      background: white;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      transition: transform 0.2s, box-shadow 0.2s;
+      cursor: pointer;
+    }
+
+    .item-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+    }
+
+    .item-image {
+      width: 100%;
+      height: 200px;
+      background: linear-gradient(135deg, var(--gray-100) 0%, var(--gray-500) 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 48px;
+    }
+
+    .item-content {
+      padding: 20px;
+    }
+
+    .item-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--peacocks-navy);
+      margin-bottom: 8px;
+    }
+
+    .item-desc {
+      font-size: 14px;
+      color: var(--gray-500);
+      margin-bottom: 16px;
+    }
+
+    .item-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .item-price {
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--peacocks-navy);
+    }
+
+    .add-btn {
+      background: var(--peacocks-teal);
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .cart-badge {
+      position: relative;
+      cursor: pointer;
+    }
+
+    .cart-count {
+      position: absolute;
+      top: -8px;
+      right: -8px;
+      background: var(--peacocks-gold);
+      color: var(--peacocks-navy);
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .typing-indicator {
+      display: flex;
+      gap: 4px;
+      padding: 12px 16px;
+      background: var(--gray-100);
+      border-radius: 16px;
+      width: fit-content;
+    }
+
+    .typing-dot {
+      width: 8px;
+      height: 8px;
+      background: var(--gray-500);
+      border-radius: 50%;
+      animation: typing 1.4s infinite;
+    }
+
+    .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+    .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+    @keyframes typing {
+      0%, 60%, 100% { transform: translateY(0); opacity: 0.7; }
+      30% { transform: translateY(-10px); opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Landing Page -->
+  <div class="landing" id="landing">
+    <div class="nav">
+      <div class="nav-brand">PEACOCKS</div>
+      <div class="nav-user">
+        <span>Dave Thompson</span>
+        <span class="badge">STYLE CLUB GOLD</span>
+        <span style="opacity:0.7;">15% Off</span>
+      </div>
+    </div>
+
+    <div class="hero">
+      <h1>Discover Your<br/>Perfect Style</h1>
+      <p>AI-powered fashion assistant helping you find menswear, womenswear, kids clothing, and accessories that match your style.</p>
+      <button class="cta-btn" onclick="startStyling()">Start Styling →</button>
+    </div>
+  </div>
+
+  <!-- Chat Interface -->
+  <div class="chat-app" id="chatApp">
+    <div class="chat-header">
+      <div>
+        <div style="font-size:20px;font-weight:700;">PEACOCKS AI STYLIST</div>
+        <div style="font-size:13px;opacity:0.8;">Dave • Gold Member • PC-8472-019</div>
+      </div>
+      <div class="cart-badge" onclick="toggleCart()">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="9" cy="21" r="1"></circle>
+          <circle cx="20" cy="21" r="1"></circle>
+          <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+        </svg>
+        <span class="cart-count" id="cartCount">0</span>
+      </div>
+    </div>
+
+    <div class="chat-body">
+      <!-- Chat Panel (30%) -->
+      <div class="chat-panel">
+        <div class="messages" id="messages">
+          <!-- Messages will be added here -->
+        </div>
+
+        <div class="chips" id="chips">
+          <!-- Chips will be added here -->
+        </div>
+
+        <div class="chat-input">
+          <input
+            type="text"
+            id="userInput"
+            placeholder="Tell me what you're looking for..."
+            onkeypress="handleKeyPress(event)"
+          />
+          <button class="send-btn" onclick="sendMessage()">Send</button>
+        </div>
+      </div>
+
+      <!-- Content Panel (70%) -->
+      <div class="content-panel" id="contentPanel">
+        <div class="category-header">
+          <h2>Welcome Back, Dave</h2>
+          <p>Tell me what you're shopping for today and I'll help you find the perfect items.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // App State
+    let messages = [];
+    let currentCategory = null;
+    let cartItems = [];
+
+    // Mock Fashion Data
+    const fashionData = {
+      menswear: [
+        { id: 1, title: 'Smart Casual Weekend Look', desc: 'Relaxed fit chinos with premium cotton shirt', price: 45, emoji: '👔', features: ['Breathable', 'Easy Care'] },
+        { id: 2, title: 'Business Formal Suit', desc: 'Tailored two-piece suit with modern fit', price: 120, emoji: '🤵', features: ['Wool Blend', 'Dry Clean'] },
+        { id: 3, title: 'Sports Leisure Set', desc: 'Comfortable tracksuit for active lifestyles', price: 35, emoji: '🏃', features: ['Moisture Wicking', 'Stretch Fabric'] }
+      ],
+      womenswear: [
+        { id: 4, title: 'Floral Summer Dress', desc: 'Elegant midi dress perfect for any occasion', price: 38, emoji: '👗', features: ['Flowy', 'Machine Washable'] },
+        { id: 5, title: 'Professional Blazer Set', desc: 'Structured blazer with matching trousers', price: 65, emoji: '💼', features: ['Fitted', 'Versatile'] },
+        { id: 6, title: 'Casual Weekend Outfit', desc: 'Comfortable jeans with stylish top', price: 42, emoji: '👚', features: ['Stretch Denim', 'All Day Comfort'] }
+      ],
+      kids: [
+        { id: 7, title: 'School Uniform Set', desc: 'Complete uniform with polo and trousers', price: 28, emoji: '🎒', features: ['Durable', 'Easy Iron'] },
+        { id: 8, title: 'Playtime Essentials', desc: 'Comfy t-shirts and shorts for active kids', price: 22, emoji: '⚽', features: ['Soft Cotton', 'Fun Colors'] },
+        { id: 9, title: 'Party Outfit', desc: 'Smart dress or shirt for special occasions', price: 32, emoji: '🎉', features: ['Special Occasion', 'Comfortable Fit'] }
+      ],
+      accessories: [
+        { id: 10, title: 'Leather Handbag', desc: 'Stylish everyday bag with multiple compartments', price: 48, emoji: '👜', features: ['Genuine Leather', 'Multiple Pockets'] },
+        { id: 11, title: 'Classic Watch', desc: 'Timeless timepiece for any outfit', price: 55, emoji: '⌚', features: ['Water Resistant', '2 Year Warranty'] },
+        { id: 12, title: 'Fashion Jewelry Set', desc: 'Statement necklace and earrings', price: 18, emoji: '💎', features: ['Hypoallergenic', 'Gift Boxed'] }
+      ]
+    };
+
+    // Chips by phase
+    const chipSets = {
+      discovery: ['Menswear', 'Womenswear', 'Kids', 'Accessories', 'New Arrivals', 'Sale Items'],
+      menswear: ['Smart Casual', 'Formal Wear', 'Sportswear'],
+      womenswear: ['Dresses', 'Work Wear', 'Casual'],
+      kids: ['School Uniform', 'Playwear', 'Party Outfits'],
+      accessories: ['Bags', 'Jewelry', 'Watches']
+    };
+
+    // Initialize
+    function startStyling() {
+      document.getElementById('landing').style.display = 'none';
+      document.getElementById('chatApp').classList.add('active');
+
+      addMessage('Dave, welcome back! How can I help you find the perfect outfit today? I can show you menswear, womenswear, kids clothing, or accessories.', false);
+      showChips(chipSets.discovery);
+    }
+
+    function addMessage(text, isUser) {
+      const time = new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+      const msg = { text, isUser, time };
+      messages.push(msg);
+      renderMessages();
+    }
+
+    function renderMessages() {
+      const container = document.getElementById('messages');
+      container.innerHTML = messages.map(msg => `
+        <div class="message ${msg.isUser ? 'user' : 'agent'}">
+          <div class="message-bubble">${msg.text}</div>
+          <div class="message-time">${msg.time}</div>
+        </div>
+      `).join('');
+      container.scrollTop = container.scrollHeight;
+    }
+
+    function showChips(chips) {
+      const container = document.getElementById('chips');
+      container.innerHTML = chips.map(chip =>
+        `<button class="chip" onclick="handleChipClick('${chip}')">${chip}</button>`
+      ).join('');
+    }
+
+    function handleChipClick(chip) {
+      sendMessage(chip);
+    }
+
+    function sendMessage(text) {
+      const input = document.getElementById('userInput');
+      const message = text || input.value.trim();
+      if (!message) return;
+
+      addMessage(message, true);
+      input.value = '';
+
+      // Show typing indicator
+      showTyping();
+
+      // Process message
+      setTimeout(() => {
+        hideTyping();
+        processUserMessage(message);
+      }, 1000);
+    }
+
+    function showTyping() {
+      const container = document.getElementById('messages');
+      const typing = document.createElement('div');
+      typing.className = 'message agent';
+      typing.id = 'typing';
+      typing.innerHTML = `
+        <div class="typing-indicator">
+          <div class="typing-dot"></div>
+          <div class="typing-dot"></div>
+          <div class="typing-dot"></div>
+        </div>
+      `;
+      container.appendChild(typing);
+      container.scrollTop = container.scrollHeight;
+    }
+
+    function hideTyping() {
+      const typing = document.getElementById('typing');
+      if (typing) typing.remove();
+    }
+
+    function processUserMessage(msg) {
+      const lower = msg.toLowerCase();
+
+      if (lower.includes('men') || lower === 'Menswear' || lower.includes('shirt') || lower.includes('suit')) {
+        currentCategory = 'menswear';
+        addMessage("Great choice! I've found 3 menswear styles that are trending with Gold members. Check them out on the right.", false);
+        showItems('menswear');
+        showChips(chipSets.menswear);
+      }
+      else if (lower.includes('women') || lower === 'Womenswear' || lower.includes('dress') || lower.includes('ladies')) {
+        currentCategory = 'womenswear';
+        addMessage("Perfect! Here are 3 womenswear styles that match your profile. All items include your 15% Gold discount.", false);
+        showItems('womenswear');
+        showChips(chipSets.womenswear);
+      }
+      else if (lower.includes('kid') || lower === 'Kids' || lower.includes('children') || lower.includes('school')) {
+        currentCategory = 'kids';
+        addMessage("I've found 3 kids clothing options for you. These are our most popular items this month.", false);
+        showItems('kids');
+        showChips(chipSets.kids);
+      }
+      else if (lower.includes('access') || lower === 'Accessories' || lower.includes('bag') || lower.includes('jewelry')) {
+        currentCategory = 'accessories';
+        addMessage("Here are our top accessories to complete your look. All come with Gold member pricing.", false);
+        showItems('accessories');
+        showChips(chipSets.accessories);
+      }
+      else {
+        addMessage("I can help you find menswear, womenswear, kids clothing, or accessories. What would you like to see?", false);
+        showChips(chipSets.discovery);
+      }
+    }
+
+    function showItems(category) {
+      const items = fashionData[category];
+      const categoryNames = {
+        menswear: 'Menswear',
+        womenswear: 'Womenswear',
+        kids: 'Kids Clothing',
+        accessories: 'Accessories'
+      };
+
+      const panel = document.getElementById('contentPanel');
+      panel.innerHTML = `
+        <div class="category-header">
+          <h2>${categoryNames[category]}</h2>
+          <p>Your Gold member 15% discount is automatically applied</p>
+        </div>
+        <div class="items-grid">
+          ${items.map(item => `
+            <div class="item-card" onclick="viewItem(${item.id})">
+              <div class="item-image">${item.emoji}</div>
+              <div class="item-content">
+                <div class="item-title">${item.title}</div>
+                <div class="item-desc">${item.desc}</div>
+                <div class="item-footer">
+                  <div class="item-price">£${item.price}</div>
+                  <button class="add-btn" onclick="addToCart(event, ${item.id})">Add to Bag</button>
+                </div>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      `;
+    }
+
+    function addToCart(event, itemId) {
+      event.stopPropagation();
+
+      // Find item across all categories
+      let item = null;
+      for (let category in fashionData) {
+        const found = fashionData[category].find(i => i.id === itemId);
+        if (found) {
+          item = found;
+          break;
+        }
+      }
+
+      if (item) {
+        cartItems.push(item);
+        updateCartCount();
+        addMessage(`Great choice! I've added "${item.title}" to your bag. Your Gold discount is applied at checkout.`, false);
+      }
+    }
+
+    function updateCartCount() {
+      document.getElementById('cartCount').textContent = cartItems.length;
+    }
+
+    function toggleCart() {
+      alert(`Cart (${cartItems.length} items):\n\n` +
+        cartItems.map(item => `${item.title} - £${item.price}`).join('\n') +
+        `\n\nTotal: £${cartItems.reduce((sum, item) => sum + item.price, 0)}\n(Gold 15% discount applied at checkout)`
+      );
+    }
+
+    function viewItem(itemId) {
+      // Find item
+      let item = null;
+      for (let category in fashionData) {
+        const found = fashionData[category].find(i => i.id === itemId);
+        if (found) {
+          item = found;
+          break;
+        }
+      }
+
+      if (item) {
+        addMessage(`Tell me more about "${item.title}"`, true);
+        setTimeout(() => {
+          addMessage(`${item.title} - ${item.desc}. Features: ${item.features.join(', ')}. Price: £${item.price} with your Gold discount.`, false);
+        }, 500);
+      }
+    }
+
+    function handleKeyPress(event) {
+      if (event.key === 'Enter') {
+        sendMessage();
+      }
+    }
+  </script>
+
+</body>
+</html>
