@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Salesforce UKI Social Calendar 2026</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, #032D60 0%, #0B5CAB 50%, #0D9DDA 100%);
+      background-attachment: fixed;
+      color: white;
+      min-height: 100vh;
+    }
+
+    .header {
+      background: rgba(3, 45, 96, 0.95);
+      backdrop-filter: blur(10px);
+      padding: 20px 40px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .header-content {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    h1 { font-size: 28px; font-weight: 800; }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 40px;
+    }
+
+    .hero {
+      text-align: center;
+      padding: 60px 20px;
+      margin-bottom: 40px;
+    }
+
+    .hero h2 { font-size: 48px; margin-bottom: 16px; }
+    .hero p { font-size: 20px; opacity: 0.9; }
+
+    .add-event-section {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 30px;
+      border-radius: 16px;
+      margin-bottom: 40px;
+    }
+
+    .btn {
+      background: #0D9DDA;
+      color: white;
+      border: none;
+      padding: 14px 28px;
+      border-radius: 8px;
+      font-weight: 700;
+      cursor: pointer;
+      font-size: 15px;
+      transition: all 0.3s;
+    }
+
+    .btn:hover {
+      background: #0B827C;
+      transform: translateY(-2px);
+    }
+
+    .events-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+      gap: 24px;
+      margin-top: 40px;
+    }
+
+    .event-card {
+      background: rgba(26, 26, 26, 0.6);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      padding: 24px;
+      transition: all 0.3s;
+      cursor: pointer;
+    }
+
+    .event-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 32px rgba(13, 157, 218, 0.3);
+      border-color: #0D9DDA;
+    }
+
+    .event-title {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+
+    .event-detail {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+      font-size: 14px;
+      opacity: 0.8;
+    }
+
+    .event-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .btn-small {
+      padding: 8px 16px;
+      font-size: 13px;
+      flex: 1;
+    }
+
+    .btn-danger {
+      background: #dc2626;
+    }
+
+    .btn-danger:hover {
+      background: #b91c1c;
+    }
+
+    .attendees {
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      font-size: 13px;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.8);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal.active { display: flex; }
+
+    .modal-content {
+      background: linear-gradient(135deg, #032D60, #0B5CAB);
+      border: 2px solid #0D9DDA;
+      border-radius: 20px;
+      padding: 40px;
+      max-width: 600px;
+      width: 90%;
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+
+    .modal-close {
+      float: right;
+      background: rgba(255, 255, 255, 0.1);
+      border: none;
+      color: white;
+      font-size: 24px;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      cursor: pointer;
+    }
+
+    .form-field {
+      margin-bottom: 16px;
+    }
+
+    .form-field label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .form-field input,
+    .form-field textarea,
+    .form-field select {
+      width: 100%;
+      padding: 12px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 8px;
+      color: white;
+      font-size: 14px;
+      font-family: inherit;
+    }
+
+    .form-field textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+
+    ::placeholder { color: rgba(255, 255, 255, 0.5); }
+
+    select option {
+      background: #032D60;
+      color: white;
+    }
+
+    .success-message {
+      text-align: center;
+      padding: 40px 20px;
+    }
+
+    .success-icon {
+      font-size: 64px;
+      margin-bottom: 20px;
+    }
+
+    .calendar-link {
+      display: inline-block;
+      margin-top: 24px;
+      padding: 14px 32px;
+      background: #0D9DDA;
+      color: white;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: 700;
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: #4CAF50;
+      color: white;
+      padding: 16px 24px;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.3s;
+      z-index: 2000;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <div class="header-content">
+      <h1>🎉 UKI Social Calendar 2026</h1>
+      <div style="font-size:14px;opacity:0.8;">📍 Heron Tower & Around</div>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="hero">
+      <h2>Let's Connect & Celebrate Together</h2>
+      <p>Your complete guide to team events throughout 2026</p>
+    </div>
+
+    <div class="add-event-section">
+      <button class="btn" onclick="openAddModal()">
+        <span class="material-icons" style="vertical-align:middle;margin-right:8px;">add</span>
+        Add New Event
+      </button>
+    </div>
+
+    <div class="events-grid" id="eventsGrid"></div>
+  </div>
+
+  <!-- Add/Edit Modal -->
+  <div class="modal" id="eventModal">
+    <div class="modal-content">
+      <button class="modal-close" onclick="closeModal()">×</button>
+      <h3 id="modalTitle" style="margin-bottom:24px;font-size:24px;">Add Event</h3>
+      <form id="eventForm" onsubmit="saveEvent(event)">
+        <div class="form-field">
+          <label>Event Title (include emoji)</label>
+          <input type="text" id="title" required placeholder="🎉 Team Party">
+        </div>
+        <div class="form-field">
+          <label>Date</label>
+          <input type="date" id="date" required>
+        </div>
+        <div class="form-field">
+          <label>Time</label>
+          <input type="text" id="time" required placeholder="6:00 PM - 9:00 PM">
+        </div>
+        <div class="form-field">
+          <label>Location</label>
+          <input type="text" id="location" required placeholder="Heron Tower">
+        </div>
+        <div class="form-field">
+          <label>Description</label>
+          <textarea id="description" required></textarea>
+        </div>
+        <div class="form-field">
+          <label>Budget</label>
+          <input type="text" id="budget" required placeholder="£30 per person">
+        </div>
+        <button type="submit" class="btn" style="width:100%;margin-top:16px;">Save Event</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- RSVP Modal -->
+  <div class="modal" id="rsvpModal">
+    <div class="modal-content" id="rsvpContent"></div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    let events = [];
+    let editingId = null;
+
+    // Load events from localStorage
+    function loadEvents() {
+      const stored = localStorage.getItem('socialEvents');
+      if (stored) {
+        events = JSON.parse(stored);
+      } else {
+        // Default events
+        events = [
+          {
+            id: '1',
+            title: '🎊 EOQ Celebration',
+            date: '2026-05-12',
+            time: '5:00 PM onwards',
+            location: 'Heron Tower / Nearby Venue',
+            description: 'End of Quarter celebration bringing together SE & AE teams.',
+            budget: 'Partner Funded (~£30 per head)',
+            attendees: []
+          },
+          {
+            id: '2',
+            title: '☀️ Summer Sports Day',
+            date: '2026-07-15',
+            time: 'Full Day - 10 AM',
+            location: 'Local Park near Heron Tower',
+            description: 'Full team sports day with games and BBQ.',
+            budget: '~£30 per head',
+            attendees: []
+          }
+        ];
+        saveToStorage();
+      }
+      renderEvents();
+    }
+
+    function saveToStorage() {
+      localStorage.setItem('socialEvents', JSON.stringify(events));
+    }
+
+    function renderEvents() {
+      const grid = document.getElementById('eventsGrid');
+      grid.innerHTML = events.sort((a, b) => new Date(a.date) - new Date(b.date)).map(event => `
+        <div class="event-card">
+          <div class="event-title">${event.title}</div>
+          <div class="event-detail">
+            <span class="material-icons" style="font-size:18px;">calendar_today</span>
+            ${formatDate(event.date)} - ${event.time}
+          </div>
+          <div class="event-detail">
+            <span class="material-icons" style="font-size:18px;">place</span>
+            ${event.location}
+          </div>
+          <div class="event-detail">
+            <span class="material-icons" style="font-size:18px;">payments</span>
+            ${event.budget}
+          </div>
+          <div class="attendees">
+            👥 ${event.attendees.length} attending
+          </div>
+          <div class="event-actions">
+            <button class="btn btn-small" onclick="openRSVPModal('${event.id}')">RSVP</button>
+            <button class="btn btn-small" onclick="editEvent('${event.id}')">Edit</button>
+            <button class="btn btn-small btn-danger" onclick="deleteEvent('${event.id}')">Delete</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function formatDate(dateStr) {
+      const date = new Date(dateStr);
+      return date.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+    }
+
+    function openAddModal() {
+      editingId = null;
+      document.getElementById('modalTitle').textContent = 'Add New Event';
+      document.getElementById('eventForm').reset();
+      document.getElementById('eventModal').classList.add('active');
+    }
+
+    function editEvent(id) {
+      editingId = id;
+      const event = events.find(e => e.id === id);
+      document.getElementById('modalTitle').textContent = 'Edit Event';
+      document.getElementById('title').value = event.title;
+      document.getElementById('date').value = event.date;
+      document.getElementById('time').value = event.time;
+      document.getElementById('location').value = event.location;
+      document.getElementById('description').value = event.description;
+      document.getElementById('budget').value = event.budget;
+      document.getElementById('eventModal').classList.add('active');
+    }
+
+    function saveEvent(e) {
+      e.preventDefault();
+      const eventData = {
+        title: document.getElementById('title').value,
+        date: document.getElementById('date').value,
+        time: document.getElementById('time').value,
+        location: document.getElementById('location').value,
+        description: document.getElementById('description').value,
+        budget: document.getElementById('budget').value
+      };
+
+      if (editingId) {
+        const index = events.findIndex(e => e.id === editingId);
+        events[index] = { ...events[index], ...eventData };
+        showToast('Event updated!');
+      } else {
+        events.push({
+          id: Date.now().toString(),
+          ...eventData,
+          attendees: []
+        });
+        showToast('Event added!');
+      }
+
+      saveToStorage();
+      renderEvents();
+      closeModal();
+    }
+
+    function deleteEvent(id) {
+      if (confirm('Delete this event?')) {
+        events = events.filter(e => e.id !== id);
+        saveToStorage();
+        renderEvents();
+        showToast('Event deleted');
+      }
+    }
+
+    function openRSVPModal(id) {
+      const event = events.find(e => e.id === id);
+      const content = document.getElementById('rsvpContent');
+      
+      content.innerHTML = `
+        <button class="modal-close" onclick="closeRSVPModal()">×</button>
+        <h3 style="margin-bottom:24px;font-size:24px;">${event.title}</h3>
+        
+        <div style="margin-bottom:24px;">
+          <div style="margin-bottom:12px;">📅 ${formatDate(event.date)} - ${event.time}</div>
+          <div style="margin-bottom:12px;">📍 ${event.location}</div>
+          <div style="margin-bottom:12px;">${event.description}</div>
+        </div>
+
+        <div style="margin-bottom:24px;padding:16px;background:rgba(255,255,255,0.1);border-radius:8px;">
+          <strong>👥 Attendees (${event.attendees.length})</strong>
+          ${event.attendees.length > 0 ? 
+            '<div style="margin-top:12px;">' + event.attendees.map(a => 
+              `<div style="padding:8px;margin-top:4px;background:rgba(255,255,255,0.05);border-radius:4px;">${a.name}</div>`
+            ).join('') + '</div>'
+            : '<p style="opacity:0.6;margin-top:8px;">No RSVPs yet. Be the first!</p>'
+          }
+        </div>
+
+        <form onsubmit="submitRSVP(event, '${id}')">
+          <div class="form-field">
+            <label>Your Name</label>
+            <input type="text" id="rsvpName" required>
+          </div>
+          <div class="form-field">
+            <label>Your Email</label>
+            <input type="email" id="rsvpEmail" required>
+          </div>
+          <button type="submit" class="btn" style="width:100%;">Confirm RSVP & Get Calendar Invite</button>
+        </form>
+      `;
+      
+      document.getElementById('rsvpModal').classList.add('active');
+    }
+
+    function submitRSVP(e, id) {
+      e.preventDefault();
+      const name = document.getElementById('rsvpName').value;
+      const email = document.getElementById('rsvpEmail').value;
+      
+      const event = events.find(ev => ev.id === id);
+      
+      // Check duplicate
+      if (event.attendees.some(a => a.email === email)) {
+        alert('You already RSVP\'d!');
+        return;
+      }
+
+      event.attendees.push({ name, email, timestamp: new Date().toISOString() });
+      saveToStorage();
+      renderEvents();
+
+      // Generate Google Calendar link
+      const calLink = generateCalendarLink(event);
+
+      // Show success
+      document.getElementById('rsvpContent').innerHTML = `
+        <button class="modal-close" onclick="closeRSVPModal()">×</button>
+        <div class="success-message">
+          <div class="success-icon">✅</div>
+          <h3 style="font-size:28px;margin-bottom:16px;">You're all set!</h3>
+          <p style="opacity:0.9;">RSVP confirmed for <strong>${event.title}</strong></p>
+          <a href="${calLink}" target="_blank" class="calendar-link">
+            📅 Add to Google Calendar
+          </a>
+          <p style="margin-top:24px;font-size:13px;opacity:0.7;">Calendar invite link generated. Click above to add to your calendar.</p>
+        </div>
+      `;
+
+      showToast('RSVP confirmed!');
+    }
+
+    function generateCalendarLink(event) {
+      const title = encodeURIComponent(event.title);
+      const details = encodeURIComponent(event.description + '\\n\\nLocation: ' + event.location);
+      const location = encodeURIComponent(event.location);
+      const dateStr = event.date.replace(/-/g, '');
+      const dates = `${dateStr}T180000Z/${dateStr}T210000Z`;
+      
+      return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&details=${details}&location=${location}&dates=${dates}`;
+    }
+
+    function closeModal() {
+      document.getElementById('eventModal').classList.remove('active');
+    }
+
+    function closeRSVPModal() {
+      document.getElementById('rsvpModal').classList.remove('active');
+    }
+
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      toast.textContent = message;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 3000);
+    }
+
+    // Close modals on outside click
+    document.querySelectorAll('.modal').forEach(modal => {
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+          modal.classList.remove('active');
+        }
+      });
+    });
+
+    // Load events on page load
+    loadEvents();
+    console.log('✅ Social Calendar Ready!');
+  </script>
+
+</body>
+</html>
