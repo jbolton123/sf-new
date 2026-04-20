@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Salesforce × Peacocks · Loyalty & Marketing Transformation</title>
+  <title>Salesforce × Peacocks · Agentforce Marketing POV</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
@@ -14,6 +14,38 @@
     :root {
       --accent: #1A2B4A;
       --accent-l: #2B4768;
+    }
+    .account-summary {
+      background: var(--off-white);
+      padding: 64px 48px;
+      border-left: 4px solid var(--sf-blue);
+    }
+    .account-summary h3 {
+      color: var(--sf-navy);
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .account-summary p {
+      margin-bottom: 16px;
+      line-height: 1.8;
+    }
+    .product-list {
+      list-style: none;
+      padding-left: 0;
+    }
+    .product-list li {
+      padding: 8px 0 8px 20px;
+      position: relative;
+    }
+    .product-list li:before {
+      content: "•";
+      position: absolute;
+      left: 0;
+      color: var(--sf-blue);
+      font-weight: bold;
     }
   </style>
 </head>
@@ -35,66 +67,285 @@
   <div class="hero">
     <div class="hero-inner">
       <div>
-        <div class="hero-eyebrow">Loyalty · Marketing · Personalisation</div>
-        <h1>Transform customer engagement.<br/><em>Drive loyalty at scale.</em></h1>
-        <p class="hero-sub">Peacocks can unlock deeper customer relationships and drive repeat purchase behaviour through a unified loyalty and marketing platform — powered by Salesforce.</p>
+        <div class="hero-eyebrow">Agentforce Marketing · Point of View</div>
+        <h1>From reactive retailer<br/><em>to agentic brand.</em></h1>
+        <p class="hero-sub">Peacocks is at a critical juncture where 98% YoY digital growth is outpacing its ability to deliver personalized, efficient customer experiences. Agentforce Marketing transforms this challenge into competitive advantage.</p>
         <div class="hero-quote">
-          <p>"Customers expect personalised experiences. We need the technology to deliver them at scale."</p>
-          <cite>Retail Leadership — Peacocks</cite>
+          <p>"The window to automate efficiency while driving growth is narrowing. Every day with siloed systems is a day competitors capture market share."</p>
+          <cite>Strategic Insight — Salesforce</cite>
         </div>
       </div>
       <div class="hero-kpi">
         <div class="hero-kpi-card">
-          <div class="hkc-val"><span>35%</span></div>
-          <div class="hkc-label">Increase in repeat purchase with loyalty programmes</div>
+          <div class="hkc-val"><span>98%</span></div>
+          <div class="hkc-label">YoY e-commerce revenue growth (2024)</div>
         </div>
         <div class="hero-kpi-card">
-          <div class="hkc-val"><span>2.5x</span></div>
-          <div class="hkc-label">Higher customer lifetime value for engaged members</div>
+          <div class="hkc-val">340+</div>
+          <div class="hkc-label">UK stores ready for omnichannel integration</div>
         </div>
         <div class="hero-kpi-card">
-          <div class="hkc-val">400+</div>
-          <div class="hkc-label">Stores ready to activate unified experience</div>
+          <div class="hkc-val"><span>Cost</span></div>
+          <div class="hkc-label">Squeeze driving value-conscious consumers</div>
         </div>
         <div class="hero-kpi-card">
-          <div class="hkc-val">90<span style="font-size:18px;color:rgba(255,255,255,0.5);"> days</span></div>
-          <div class="hkc-label">To first loyalty programme launch</div>
+          <div class="hkc-val">Now</div>
+          <div class="hkc-label">The moment to act before competitors advance</div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- ─── VALUE PROPS (3-card grid) ───────────────────────── -->
-  <div class="section" style="padding-top:100px;">
-    <div class="eyebrow">Why Salesforce</div>
-    <div class="section-title">Three capabilities that unlock<br/>retail transformation</div>
-    <div class="section-sub">A unified platform to connect every customer touchpoint — in-store, online, and mobile.</div>
-    <div class="card-grid-3" style="margin-top:48px;">
+  <!-- ─── ACCOUNT SUMMARY ─────────────────────────────────── -->
+  <div class="section-bg">
+    <div class="section">
+      <div class="eyebrow">Account Intelligence</div>
+      <div class="section-title">Strategic Account Snapshot</div>
+      <div class="section-sub">Understanding Peacocks' position, priorities, and potential.</div>
 
-      <!-- Value Prop 1 -->
-      <div class="card" style="background:linear-gradient(135deg, rgba(1,118,211,0.03) 0%, rgba(1,118,211,0.08) 100%);border:1px solid rgba(1,118,211,0.15);">
-        <div class="card-icon" style="font-size:40px;">🎯</div>
-        <div class="card-title" style="color:var(--sf-navy);font-size:20px;font-weight:700;margin:16px 0 12px;">Unified Customer View</div>
-        <div class="card-body" style="color:var(--body);line-height:1.7;">
-          <strong>Connect every customer interaction</strong> across all channels. Real-time profile updates mean your team sees purchase history, preferences, and engagement — whether customers shop in-store or online.
+      <div class="account-summary" style="margin-top:48px;">
+        <h3>Company Overview</h3>
+        <p>Peacocks is a leading UK value fashion retailer, part of the Baaj Trading group (under Green Spark Holdings). With over 340 stores across the UK, they focus on providing affordable, on-trend fashion for the whole family, maintaining a significant high-street presence while aggressively expanding their digital footprint.</p>
+
+        <h3>Business Model & Personas</h3>
+        <p>Peacocks operates a high-volume, value-based retail model. They generate revenue through a mix of brick-and-mortar sales and an e-commerce platform that recently underwent a major relaunch. Their target market consists of value-conscious UK families and fashion-forward shoppers looking for affordability. Key buyer personas include the Head of Digital, CMO, and CTO, who are tasked with balancing store profitability with digital scale.</p>
+
+        <h3>Strategic Priorities (Current Year)</h3>
+        <p>Peacocks is currently focused on <strong>"Profitability Recovery"</strong> following a period of restructuring, <strong>"Digital Acceleration"</strong> to capitalize on their 98% YoY e-commerce revenue growth, and <strong>"Store Modernization"</strong> to integrate physical locations into a seamless omnichannel journey (e.g., Click & Collect optimization).</p>
+
+        <h3>Recent Initiatives</h3>
+        <p>In 2024, Peacocks relaunched its website with a heavy focus on SEO and user experience, which has already yielded high ROI. They are also repositioning physical stores as "destination locations" to better compete with ultra-fast fashion rivals by leveraging their physical proximity to customers.</p>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider" />
+
+  <!-- ─── SALESFORCE FOOTPRINT ────────────────────────────── -->
+  <div class="section">
+    <div class="eyebrow">Current State</div>
+    <div class="section-title">Salesforce Footprint</div>
+    <div class="section-sub">Existing products and the strategic gap.</div>
+
+    <div class="card-grid-2" style="margin-top:48px;">
+      <div class="card" style="padding:32px;background:linear-gradient(135deg, rgba(1,118,211,0.03) 0%, rgba(1,118,211,0.08) 100%);">
+        <div style="font-size:14px;font-weight:600;color:var(--sf-blue);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:16px;">Current Products</div>
+        <ul class="product-list">
+          <li><strong>Data 360 Credits</strong> — Foundation for unified customer data</li>
+          <li><strong>Commerce Cloud B2C Premium</strong> — Powering e-commerce growth</li>
+          <li><strong>Designated Test Realm B2C</strong> — Development environment</li>
+          <li><strong>Signature Success B2C Commerce</strong> — Premium support</li>
+          <li><strong>Salesforce Foundations</strong> — Core sales capabilities</li>
+        </ul>
+      </div>
+
+      <div class="card" style="padding:32px;background:linear-gradient(135deg, rgba(182,5,84,0.03) 0%, rgba(182,5,84,0.08) 100%);">
+        <div style="font-size:14px;font-weight:600;color:var(--accent);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:16px;">The Gap</div>
+        <p style="margin-bottom:24px;line-height:1.8;">Peacocks has a strong foundation with Commerce Cloud and has begun their data journey with Data 360. However, <strong>they lack a dedicated Marketing Cloud engine to activate this data.</strong></p>
+        <div style="background:white;padding:24px;border-radius:8px;border:2px solid var(--accent);">
+          <div style="font-weight:700;color:var(--accent);margin-bottom:8px;">Strategic Recommendation</div>
+          <p style="margin:0;line-height:1.7;">Move to <strong>Marketing Cloud Advanced</strong> with <strong>Agentforce Marketing</strong> to bridge the gap between commerce transactions and personalized, agentic engagement.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider" />
+
+  <!-- ─── EXTERNAL RESEARCH ───────────────────────────────── -->
+  <div class="section-bg">
+    <div class="section">
+      <div class="eyebrow">Market Context</div>
+      <div class="section-title">External Research Summary</div>
+      <div class="section-sub">The forces shaping Peacocks' competitive landscape.</div>
+
+      <div class="card-grid-2" style="margin-top:48px;">
+        <div class="card" style="padding:28px;">
+          <div style="font-size:32px;margin-bottom:12px;">💷</div>
+          <div style="font-weight:700;font-size:18px;color:var(--sf-navy);margin-bottom:12px;">The Value Shift</div>
+          <p style="line-height:1.7;">UK consumers are facing a cost-of-living squeeze, driving them toward value retailers like Peacocks. However, this has invited aggressive competition from Shein and Primark, meaning Peacocks must compete on <strong>"Experience" and "Loyalty,"</strong> not just price.</p>
+        </div>
+
+        <div class="card" style="padding:28px;">
+          <div style="font-size:32px;margin-bottom:12px;">🔄</div>
+          <div style="font-weight:700;font-size:18px;color:var(--sf-navy);margin-bottom:12px;">Omnichannel Friction</div>
+          <p style="line-height:1.7;">While e-commerce is growing (98% YoY), the "Click & Collect" and returns process remains a potential friction point. <strong>Bridging the gap between 340+ stores and the digital site is critical for retention.</strong></p>
+        </div>
+
+        <div class="card" style="padding:28px;">
+          <div style="font-size:32px;margin-bottom:12px;">⚡</div>
+          <div style="font-weight:700;font-size:18px;color:var(--sf-navy);margin-bottom:12px;">Operational Efficiency</div>
+          <p style="line-height:1.7;">With rising business rates and National Insurance hikes in the UK, Peacocks' leadership is under pressure to drive <strong>"Efficiency Mode,"</strong> looking for ways to automate customer service and marketing operations to protect margins.</p>
+        </div>
+
+        <div class="card" style="padding:28px;">
+          <div style="font-size:32px;margin-bottom:12px;">📊</div>
+          <div style="font-weight:700;font-size:18px;color:var(--sf-navy);margin-bottom:12px;">First-Party Data Gap</div>
+          <p style="line-height:1.7;">While they have Commerce Cloud data, the lack of a unified marketing engine suggests they may be <strong>over-relying on blanket discounts</strong> rather than personalized, data-driven offers to drive repeat purchases.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider" />
+
+  <!-- ─── WHY CHANGE ──────────────────────────────────────── -->
+  <div class="section">
+    <div class="eyebrow">The Case for Change</div>
+    <div class="section-title">Why Change?</div>
+    <div class="section-sub">The structural limitations holding Peacocks back.</div>
+
+    <div style="max-width:900px;margin:48px auto 0;">
+      <p style="font-size:18px;line-height:1.9;color:var(--body);margin-bottom:24px;">
+        Peacocks is at a critical juncture where its digital success (98% YoY growth) is outpacing its ability to provide a personalized, efficient customer experience. Externally, the UK retail market is defined by a value-conscious consumer who demands instant, mobile-first service. Internally, Peacocks is constrained by a <strong>fragmented operating model</strong> where Commerce transactions and Marketing outreach likely live in separate worlds.
+      </p>
+      <p style="font-size:18px;line-height:1.9;color:var(--body);margin-bottom:24px;">
+        Currently, Peacocks relies on a traditional <strong>"broadcast" marketing model</strong> which is fundamentally limited. This structural limitation prevents the brand from scaling personalization across its 340+ locations and digital storefront. Without a unified agentic approach, Peacocks risks:
+      </p>
+      <ul style="font-size:17px;line-height:1.9;color:var(--body);margin:32px 0 32px 24px;">
+        <li style="margin-bottom:16px;"><strong>High customer churn</strong> to faster, more automated competitors (like Shein)</li>
+        <li style="margin-bottom:16px;"><strong>High operational costs</strong> due to manual campaign assembly and routine service inquiries</li>
+        <li style="margin-bottom:16px;"><strong>Margin erosion</strong> from continued reliance on blanket discounts rather than intelligent, high-value relationships</li>
+      </ul>
+      <div style="background:linear-gradient(135deg, rgba(182,5,84,0.05) 0%, rgba(182,5,84,0.12) 100%);padding:32px;border-radius:12px;border-left:4px solid var(--accent);margin-top:40px;">
+        <div style="font-weight:700;font-size:20px;color:var(--accent);margin-bottom:12px;">The Cost of Doing Nothing</div>
+        <p style="margin:0;font-size:17px;line-height:1.8;">Continued reliance on margin-eroding blanket discounts to drive volume, rather than using intelligence to drive high-value, loyal customer relationships.</p>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider" />
+
+  <!-- ─── WHY AGENTFORCE MARKETING ────────────────────────── -->
+  <div class="section-bg">
+    <div class="section">
+      <div class="eyebrow eyebrow-accent">The Solution</div>
+      <div class="section-title">Why Agentforce Marketing?</div>
+      <div class="section-sub">From one-way sends to two-way conversations that scale.</div>
+
+      <div style="max-width:900px;margin:48px auto 0;">
+        <p style="font-size:18px;line-height:1.9;color:var(--body);margin-bottom:32px;">
+          Agentforce Marketing transforms Peacocks from a reactive retailer into an <strong>agentic brand</strong> that anticipates customer needs. By leveraging the Data 360 foundation they already have, Agentforce Marketing allows Peacocks to deploy <strong>autonomous agents</strong> that act on behalf of the brand to drive revenue and efficiency.
+        </p>
+        <div style="background:white;padding:32px;border-radius:12px;border:2px solid var(--sf-blue);margin-bottom:32px;">
+          <div style="font-weight:700;font-size:20px;color:var(--sf-blue);margin-bottom:12px;">This isn't just about automation</div>
+          <p style="margin:0;font-size:17px;line-height:1.8;">It's about moving from "one-way sends" to "two-way conversations" that scale across every touchpoint—from the mobile app to the high street store.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider" />
+
+  <!-- ─── USE CASES ───────────────────────────────────────── -->
+  <div class="section">
+    <div class="eyebrow">Agentforce in Action</div>
+    <div class="section-title">Four Use Cases for Peacocks</div>
+    <div class="section-sub">Autonomous agents driving revenue, efficiency, and experience.</div>
+
+    <div class="card-grid-2" style="margin-top:48px;">
+
+      <!-- Use Case 1 -->
+      <div class="beach-card">
+        <div class="bc-head">
+          <div class="bc-icon" style="background:rgba(1,118,211,0.08);">🔄</div>
+          <div class="bc-meta">
+            <div class="bc-title">Concierge Returns & Exchange</div>
+            <div class="bc-sub">Reduce friction, increase store footfall</div>
+          </div>
+          <div class="bc-badge" style="background:rgba(1,118,211,0.08);color:var(--sf-blue);border:1px solid rgba(1,118,211,0.15);">Omnichannel</div>
+        </div>
+        <div class="bc-body">
+          <div style="margin-bottom:20px;">
+            <div style="font-weight:600;font-size:15px;color:var(--sf-navy);margin-bottom:8px;">Strategic Bridge</div>
+            <p style="margin:0;font-size:14px;line-height:1.7;color:var(--body);">Supports Peacocks' goal of profitability and store modernization by reducing the friction and cost of high-street returns.</p>
+          </div>
+          <div style="margin-bottom:20px;">
+            <div style="font-weight:600;font-size:15px;color:var(--sf-navy);margin-bottom:8px;">The Solution</div>
+            <p style="margin:0;font-size:14px;line-height:1.7;color:var(--body);">Using <strong>Two-Way Agentic Messaging</strong>, Peacocks can turn a "Your order has been delivered" SMS into a conversation. If a customer needs a different size, the agent can check local store stock in real-time, reserve the item for Click & Collect, and provide a QR code for the return—all within the chat thread.</p>
+          </div>
+          <div style="background:rgba(1,118,211,0.05);padding:16px;border-radius:8px;">
+            <div style="font-weight:600;font-size:14px;color:var(--sf-blue);margin-bottom:6px;">The Outcome</div>
+            <p style="margin:0;font-size:14px;line-height:1.6;">Reduced return-to-landfill rates, increased store footfall, and significantly lower customer service volume.</p>
+          </div>
         </div>
       </div>
 
-      <!-- Value Prop 2 -->
-      <div class="card" style="background:linear-gradient(135deg, rgba(11,130,124,0.03) 0%, rgba(11,130,124,0.08) 100%);border:1px solid rgba(11,130,124,0.15);">
-        <div class="card-icon" style="font-size:40px;">💎</div>
-        <div class="card-title" style="color:var(--sf-navy);font-size:20px;font-weight:700;margin:16px 0 12px;">Intelligent Loyalty Engine</div>
-        <div class="card-body" style="color:var(--body);line-height:1.7;">
-          <strong>Build loyalty programmes that drive behaviour.</strong> Points, tiers, rewards, and personalised offers — all configured without code. Launch campaigns in days, not months.
+      <!-- Use Case 2 -->
+      <div class="beach-card">
+        <div class="bc-head">
+          <div class="bc-icon" style="background:rgba(11,130,124,0.08);">👗</div>
+          <div class="bc-meta">
+            <div class="bc-title">The Adaptive Digital Stylist</div>
+            <div class="bc-sub">Dynamic personalization at scale</div>
+          </div>
+          <div class="bc-badge" style="background:rgba(11,130,124,0.08);color:#0B827C;border:1px solid rgba(11,130,124,0.15);">Digital</div>
+        </div>
+        <div class="bc-body">
+          <div style="margin-bottom:20px;">
+            <div style="font-weight:600;font-size:15px;color:var(--sf-navy);margin-bottom:8px;">Strategic Bridge</div>
+            <p style="margin:0;font-size:14px;line-height:1.7;color:var(--body);">Accelerates Peacocks' "Digital Growth" priority by increasing e-commerce conversion rates and average order value.</p>
+          </div>
+          <div style="margin-bottom:20px;">
+            <div style="font-weight:600;font-size:15px;color:var(--sf-navy);margin-bottom:8px;">The Solution</div>
+            <p style="margin:0;font-size:14px;line-height:1.7;color:var(--body);">By implementing <strong>Adaptive Websites</strong>, Peacocks can transform their web experience. When a customer searches for "wedding guest dresses," the site layout and recommendations dynamically adapt based on the customer's real-time chat with an AI agent and their historical style preferences from Data 360.</p>
+          </div>
+          <div style="background:rgba(11,130,124,0.05);padding:16px;border-radius:8px;">
+            <div style="font-weight:600;font-size:14px;color:#0B827C;margin-bottom:6px;">The Outcome</div>
+            <p style="margin:0;font-size:14px;line-height:1.6;">Higher digital conversion and a premium shopping experience that rivals high-end boutique digital experiences.</p>
+          </div>
         </div>
       </div>
 
-      <!-- Value Prop 3 -->
-      <div class="card" style="background:linear-gradient(135deg, rgba(182,5,84,0.03) 0%, rgba(182,5,84,0.08) 100%);border:1px solid rgba(182,5,84,0.15);">
-        <div class="card-icon" style="font-size:40px;">✨</div>
-        <div class="card-title" style="color:var(--sf-navy);font-size:20px;font-weight:700;margin:16px 0 12px;">AI-Powered Personalisation</div>
-        <div class="card-body" style="color:var(--body);line-height:1.7;">
-          <strong>Deliver the right message at the right moment.</strong> Einstein AI predicts next-best actions, product recommendations, and optimal send times — driving engagement and conversion.
+      <!-- Use Case 3 -->
+      <div class="beach-card">
+        <div class="bc-head">
+          <div class="bc-icon" style="background:rgba(182,5,84,0.08);">💎</div>
+          <div class="bc-meta">
+            <div class="bc-title">Autonomous Loyalty Revitalization</div>
+            <div class="bc-sub">Smart incentives without discounting</div>
+          </div>
+          <div class="bc-badge" style="background:rgba(182,5,84,0.08);color:var(--accent);border:1px solid rgba(182,5,84,0.15);">Loyalty</div>
+        </div>
+        <div class="bc-body">
+          <div style="margin-bottom:20px;">
+            <div style="font-weight:600;font-size:15px;color:var(--sf-navy);margin-bottom:8px;">Strategic Bridge</div>
+            <p style="margin:0;font-size:14px;line-height:1.7;color:var(--body);">Combats the "Cost-of-Living" squeeze by driving repeat purchase frequency among Peacocks' core family shoppers.</p>
+          </div>
+          <div style="margin-bottom:20px;">
+            <div style="font-weight:600;font-size:15px;color:var(--sf-navy);margin-bottom:8px;">The Solution</div>
+            <p style="margin:0;font-size:14px;line-height:1.7;color:var(--body);">Leveraging <strong>Loyalty Promotion Creation</strong>, Agentforce Marketing can autonomously identify segments that haven't visited a store in 30 days and generate a tailored "Bonus Points" promotion linked to their favorite category (e.g., Kidswear), delivering it via a personalized email.</p>
+          </div>
+          <div style="background:rgba(182,5,84,0.05);padding:16px;border-radius:8px;">
+            <div style="font-weight:600;font-size:14px;color:var(--accent);margin-bottom:6px;">The Outcome</div>
+            <p style="margin:0;font-size:14px;line-height:1.6;">Increased Customer Lifetime Value (CLTV) and more effective, non-discount-based loyalty incentives.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Use Case 4 -->
+      <div class="beach-card">
+        <div class="bc-head">
+          <div class="bc-icon" style="background:rgba(221,122,1,0.08);">📱</div>
+          <div class="bc-meta">
+            <div class="bc-title">Scale 1:1 Personalization in Paid Media</div>
+            <div class="bc-sub">Optimize spend, maximize ROAS</div>
+          </div>
+          <div class="bc-badge" style="background:rgba(221,122,1,0.08);color:#DD7A01;border:1px solid rgba(221,122,1,0.15);">Performance</div>
+        </div>
+        <div class="bc-body">
+          <div style="margin-bottom:20px;">
+            <div style="font-weight:600;font-size:15px;color:var(--sf-navy);margin-bottom:8px;">Strategic Bridge</div>
+            <p style="margin:0;font-size:14px;line-height:1.7;color:var(--body);">Optimizes marketing spend and reduces Customer Acquisition Costs (CAC) amidst rising digital advertising rates.</p>
+          </div>
+          <div style="margin-bottom:20px;">
+            <div style="font-weight:600;font-size:15px;color:var(--sf-navy);margin-bottom:8px;">The Solution</div>
+            <p style="margin:0;font-size:14px;line-height:1.7;color:var(--body);">Using <strong>Paid Media Optimization</strong>, Agentforce can automatically identify which ad sets for the new "Spring Collection" are underperforming across Meta and Google, pausing them and reallocating budget to high-intent segments identified in Data 360.</p>
+          </div>
+          <div style="background:rgba(221,122,1,0.05);padding:16px;border-radius:8px;">
+            <div style="font-weight:600;font-size:14px;color:#DD7A01;margin-bottom:6px;">The Outcome</div>
+            <p style="margin:0;font-size:14px;line-height:1.6;">Improved Return on Ad Spend (ROAS) and faster campaign speed-to-market.</p>
+          </div>
         </div>
       </div>
 
@@ -103,48 +354,46 @@
 
   <hr class="divider" />
 
-  <!-- ─── WHAT THIS UNLOCKS ───────────────────────────────── -->
+  <!-- ─── WHY NOW ─────────────────────────────────────────── -->
   <div class="section-bg">
     <div class="section">
-      <div class="eyebrow eyebrow-accent">What This Unlocks</div>
-      <div class="section-title">From fragmented to connected</div>
-      <div class="section-sub">Transform how Peacocks engages customers across every touchpoint.</div>
+      <div class="eyebrow">Urgency</div>
+      <div class="section-title">Why Now?</div>
+      <div class="section-sub">The window to act is narrowing.</div>
 
-      <div class="card-grid-2" style="margin-top:48px;">
-        <div class="card" style="padding:32px;">
-          <div style="font-size:14px;font-weight:600;color:var(--sf-blue);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:16px;">For Customers</div>
-          <ul style="list-style:none;padding:0;margin:0;">
-            <li style="display:flex;gap:12px;margin-bottom:16px;align-items:start;">
-              <div style="min-width:6px;height:6px;background:var(--sf-blue);border-radius:50%;margin-top:8px;"></div>
-              <div><strong>Seamless experience</strong> — earn and redeem rewards in-store and online</div>
-            </li>
-            <li style="display:flex;gap:12px;margin-bottom:16px;align-items:start;">
-              <div style="min-width:6px;height:6px;background:var(--sf-blue);border-radius:50%;margin-top:8px;"></div>
-              <div><strong>Personalised offers</strong> — based on shopping habits and preferences</div>
-            </li>
-            <li style="display:flex;gap:12px;margin-bottom:16px;align-items:start;">
-              <div style="min-width:6px;height:6px;background:var(--sf-blue);border-radius:50%;margin-top:8px;"></div>
-              <div><strong>Relevant communication</strong> — not generic blasts, but curated content</div>
-            </li>
-          </ul>
-        </div>
+      <div style="max-width:900px;margin:48px auto 0;">
+        <p style="font-size:18px;line-height:1.9;color:var(--body);margin-bottom:32px;">
+          Delaying the move to an agentic marketing model directly stalls Peacocks' ability to capitalize on its recent web relaunch. <strong>Every day spent with a siloed commerce and marketing stack is a day that competitors like M&S or Primark use to capture Peacocks' market share</strong> through superior, AI-driven convenience.
+        </p>
+        <p style="font-size:18px;line-height:1.9;color:var(--body);margin-bottom:32px;">
+          As UK retail enters a period of high operational pressure, the window to automate "efficiency" while driving "growth" is narrowing.
+        </p>
 
-        <div class="card" style="padding:32px;">
-          <div style="font-size:14px;font-weight:600;color:var(--accent);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:16px;">For Peacocks</div>
-          <ul style="list-style:none;padding:0;margin:0;">
-            <li style="display:flex;gap:12px;margin-bottom:16px;align-items:start;">
-              <div style="min-width:6px;height:6px;background:var(--accent);border-radius:50%;margin-top:8px;"></div>
-              <div><strong>Single customer view</strong> — across all channels and touchpoints</div>
-            </li>
-            <li style="display:flex;gap:12px;margin-bottom:16px;align-items:start;">
-              <div style="min-width:6px;height:6px;background:var(--accent);border-radius:50%;margin-top:8px;"></div>
-              <div><strong>Faster campaign execution</strong> — launch in hours, not weeks</div>
-            </li>
-            <li style="display:flex;gap:12px;margin-bottom:16px;align-items:start;">
-              <div style="min-width:6px;height:6px;background:var(--accent);border-radius:50%;margin-top:8px;"></div>
-              <div><strong>Measurable ROI</strong> — track every pound spent on acquisition and retention</div>
-            </li>
-          </ul>
+        <div style="background:linear-gradient(135deg, rgba(1,118,211,0.05) 0%, rgba(1,118,211,0.12) 100%);padding:40px;border-radius:12px;border-left:4px solid var(--sf-blue);">
+          <div style="font-weight:700;font-size:22px;color:var(--sf-blue);margin-bottom:24px;">Peacocks should implement Agentforce Marketing now to:</div>
+          <div style="display:grid;gap:20px;">
+            <div style="display:flex;gap:16px;align-items:start;">
+              <div style="min-width:32px;height:32px;background:var(--sf-blue);border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:14px;">1</div>
+              <div>
+                <div style="font-weight:600;font-size:17px;color:var(--sf-navy);margin-bottom:6px;">Improve Marketer Efficiency</div>
+                <p style="margin:0;font-size:15px;line-height:1.7;">Automate the assembly of multi-channel campaigns, allowing the team to focus on brand strategy rather than manual segment building.</p>
+              </div>
+            </div>
+            <div style="display:flex;gap:16px;align-items:start;">
+              <div style="min-width:32px;height:32px;background:var(--sf-blue);border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:14px;">2</div>
+              <div>
+                <div style="font-weight:600;font-size:17px;color:var(--sf-navy);margin-bottom:6px;">Improve the Customer Experience & CLTV</div>
+                <p style="margin:0;font-size:15px;line-height:1.7;">Bridge the "online-to-offline" gap, ensuring store customers feel recognized and valued when they shop online.</p>
+              </div>
+            </div>
+            <div style="display:flex;gap:16px;align-items:start;">
+              <div style="min-width:32px;height:32px;background:var(--sf-blue);border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:14px;">3</div>
+              <div>
+                <div style="font-weight:600;font-size:17px;color:var(--sf-navy);margin-bottom:6px;">Accelerate Campaign Speed-to-Market</div>
+                <p style="margin:0;font-size:15px;line-height:1.7;">Respond to weather shifts or fashion trends in hours, not weeks, using autonomous agents to deploy new journeys.</p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -155,19 +404,19 @@
   <!-- ─── CLOSING CTA ─────────────────────────────────────── -->
   <div class="section">
     <div class="closing-inner">
-      <h2>The platform is proven.<br/>The time is now.<br/>First loyalty programme live in 90 days.</h2>
-      <p>Let's transform how Peacocks connects with customers — starting with a discovery workshop to map your current state and design the future experience.</p>
+      <h2>The data is there.<br/>The platform is proven.<br/>The moment is now.</h2>
+      <p>Transform Peacocks from a reactive retailer to an agentic brand that anticipates customer needs and drives profitable growth through intelligent automation.</p>
       <div class="closing-steps">
         <div class="c-step">Discovery workshop</div>
         <div class="c-arrow">→</div>
-        <div class="c-step">Programme blueprint</div>
+        <div class="c-step">Data & use case audit</div>
         <div class="c-arrow">→</div>
-        <div class="c-step">Platform build</div>
+        <div class="c-step">Agentforce pilot</div>
         <div class="c-arrow">→</div>
-        <div class="c-step primary">Loyalty launch in 90 days</div>
+        <div class="c-step primary">First autonomous agent live</div>
       </div>
       <div style="text-align:center;margin-top:48px;">
-        <a href="mailto:jack.bolton@salesforce.com" style="display:inline-block;background:var(--sf-blue);color:white;padding:16px 32px;border-radius:8px;text-decoration:none;font-weight:600;font-size:16px;transition:all 0.2s;">
+        <a href="mailto:jack.bolton@salesforce.com" style="display:inline-block;background:var(--sf-blue);color:white;padding:18px 40px;border-radius:8px;text-decoration:none;font-weight:600;font-size:17px;transition:all 0.2s;box-shadow:0 4px 16px rgba(1,118,211,0.3);">
           Let's start the conversation
         </a>
       </div>
