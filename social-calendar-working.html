@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Salesforce UKI Social Calendar 2026</title>
+  <link rel="stylesheet" href="design-kit copy/tokens.css">
+  <link rel="stylesheet" href="design-kit copy/components.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+  <script>
+    // Simple message to user while loading
+    console.log('🎉 Salesforce Social Calendar Loading...');
+  </script>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: linear-gradient(135deg, #032D60 0%, #0B5CAB 50%, #0D9DDA 100%);
+      background-attachment: fixed;
+      color: white;
+      overflow-x: hidden;
+    }
+
+    .loading-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, #032D60 0%, #0B5CAB 50%, #0D9DDA 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .loading-screen.hidden {
+      display: none;
+    }
+
+    .spinner {
+      width: 50px;
+      height: 50px;
+      border: 4px solid rgba(255, 255, 255, 0.3);
+      border-top-color: #0D9DDA;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Copy all existing styles from social-calendar.html */
+    .header {
+      background: rgba(3, 45, 96, 0.95);
+      backdrop-filter: blur(10px);
+      padding: 24px 40px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .edit-mode-toggle {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: #0D9DDA;
+      color: white;
+      border: none;
+      padding: 16px 24px;
+      border-radius: 50px;
+      font-weight: 700;
+      font-size: 14px;
+      cursor: pointer;
+      box-shadow: 0 4px 16px rgba(13, 157, 218, 0.4);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.3s ease;
+    }
+
+    .edit-mode-toggle:hover {
+      background: #0B827C;
+      transform: translateY(-2px);
+    }
+
+    .edit-mode-toggle.active {
+      background: #4CAF50;
+    }
+
+    .test-message {
+      text-align: center;
+      padding: 40px;
+      font-size: 24px;
+      font-weight: 700;
+    }
+
+    .working-status {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #4CAF50;
+      color: white;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-weight: 600;
+      z-index: 1000;
+      box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Loading Screen -->
+  <div class="loading-screen" id="loadingScreen">
+    <div class="spinner"></div>
+    <div style="font-size: 18px; font-weight: 600;">Loading Social Calendar...</div>
+  </div>
+
+  <!-- Working Status -->
+  <div class="working-status">
+    ✅ Page Loaded Successfully - Calendar Working!
+  </div>
+
+  <!-- Test Content -->
+  <div class="test-message">
+    <h1>🎉 Salesforce UKI Social Calendar 2026</h1>
+    <p style="margin-top: 20px; font-size: 16px; color: rgba(255,255,255,0.8);">
+      Page is loading... If you see this message, the new version is deployed!
+    </p>
+    <p style="margin-top: 20px; font-size: 14px;">
+      Current time: <span id="currentTime"></span>
+    </p>
+  </div>
+
+  <!-- Edit Mode Toggle -->
+  <button class="edit-mode-toggle" onclick="alert('Edit mode is working! Full calendar loading...')">
+    <span class="material-icons" style="font-size:18px;">edit</span>
+    Test Edit Button
+  </button>
+
+  <script>
+    // Hide loading screen after 1 second
+    setTimeout(() => {
+      document.getElementById('loadingScreen').classList.add('hidden');
+    }, 1000);
+
+    // Update time every second
+    function updateTime() {
+      document.getElementById('currentTime').textContent = new Date().toLocaleTimeString();
+    }
+    setInterval(updateTime, 1000);
+    updateTime();
+
+    console.log('✅ JavaScript is working!');
+    console.log('✅ Page deployed successfully!');
+    console.log('🔄 Full calendar with Firebase coming next...');
+  </script>
+
+</body>
+</html>
