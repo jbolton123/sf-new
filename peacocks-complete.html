@@ -1,0 +1,1064 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Peacocks AI Fashion Stylist - Complete Experience</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --background: #0a0a0a;
+      --card: #1a1a1a;
+      --foreground: #ffffff;
+      --primary: #00FF9D;
+      --primary-dark: #00cc7d;
+      --peacock-pink: #FF9EC8;
+      --peacock-pink-dark: #ff6ba8;
+      --peacock-navy: #2c46a1;
+      --secondary: #2a2a2a;
+      --border: rgba(255, 255, 255, 0.1);
+      --muted: #a0a0a0;
+      --gmail-bg: #ffffff;
+      --gmail-border: #e0e0e0;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--background);
+      color: var(--foreground);
+      line-height: 1.6;
+      overflow: hidden;
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background-color: var(--primary); border-radius: 3px; }
+
+    /* Gmail Inbox Styles */
+    .gmail-view {
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      background: var(--gmail-bg);
+    }
+
+    .gmail-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--gmail-border);
+      background: white;
+    }
+
+    .gmail-logo {
+      font-size: 22px;
+      font-weight: 700;
+      color: #EA4335;
+    }
+
+    .gmail-search {
+      flex: 1;
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+    .gmail-search input {
+      width: 100%;
+      padding: 12px 48px 12px 16px;
+      border-radius: 8px;
+      border: none;
+      background: #F1F3F4;
+      font-size: 14px;
+    }
+
+    .gmail-icons {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      margin-left: auto;
+    }
+
+    .gmail-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: #3B82F6;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .gmail-body {
+      display: flex;
+      flex: 1;
+      overflow: hidden;
+    }
+
+    .gmail-sidebar {
+      width: 240px;
+      padding: 16px 8px;
+      border-right: 1px solid var(--gmail-border);
+      background: white;
+    }
+
+    .compose-btn {
+      background: #C2E7FF;
+      color: #001D35;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      width: 100%;
+      margin-bottom: 16px;
+    }
+
+    .gmail-nav {
+      list-style: none;
+    }
+
+    .gmail-nav li {
+      padding: 8px 16px;
+      border-radius: 0 16px 16px 0;
+      cursor: pointer;
+      font-size: 14px;
+      color: #202124;
+      margin-bottom: 4px;
+    }
+
+    .gmail-nav li:hover {
+      background: #F1F3F4;
+    }
+
+    .gmail-nav li.active {
+      background: #D3E3FD;
+      font-weight: 600;
+    }
+
+    .gmail-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      background: white;
+    }
+
+    .email-list {
+      flex: 1;
+      overflow-y: auto;
+    }
+
+    .email-item {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--gmail-border);
+      cursor: pointer;
+      transition: box-shadow 0.2s;
+    }
+
+    .email-item:hover {
+      box-shadow: inset 0 0 0 1px var(--gmail-border);
+    }
+
+    .email-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #FF9EC8, #B967D0);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 700;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+
+    .email-content {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .email-sender {
+      font-weight: 600;
+      font-size: 14px;
+      color: #202124;
+    }
+
+    .email-subject {
+      font-size: 13px;
+      color: #5F6368;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .email-time {
+      font-size: 12px;
+      color: #5F6368;
+      flex-shrink: 0;
+    }
+
+    /* Email Thread View */
+    .email-thread {
+      display: none;
+      flex-direction: column;
+      height: 100%;
+      background: white;
+    }
+
+    .email-thread.active {
+      display: flex;
+    }
+
+    .thread-header {
+      padding: 16px;
+      border-bottom: 1px solid var(--gmail-border);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .back-btn {
+      background: none;
+      border: none;
+      font-size: 20px;
+      cursor: pointer;
+      color: #5F6368;
+    }
+
+    .thread-subject {
+      font-size: 20px;
+      font-weight: 600;
+      color: #202124;
+    }
+
+    .thread-messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 24px;
+    }
+
+    .thread-message {
+      background: white;
+      border: 1px solid var(--gmail-border);
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 16px;
+    }
+
+    .thread-message-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .thread-message-sender {
+      flex: 1;
+      font-weight: 600;
+      color: #202124;
+    }
+
+    .thread-message-time {
+      font-size: 12px;
+      color: #5F6368;
+    }
+
+    .thread-message-body {
+      color: #202124;
+      line-height: 1.8;
+    }
+
+    .reply-box {
+      padding: 16px;
+      border-top: 1px solid var(--gmail-border);
+    }
+
+    .reply-textarea {
+      width: 100%;
+      min-height: 100px;
+      padding: 12px;
+      border: 1px solid var(--gmail-border);
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 14px;
+      resize: vertical;
+    }
+
+    .reply-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .btn-send {
+      background: var(--peacock-pink);
+      color: white;
+      border: none;
+      padding: 10px 24px;
+      border-radius: 4px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .btn-send:hover {
+      background: var(--peacock-pink-dark);
+    }
+
+    .cta-button {
+      display: inline-block;
+      background: var(--peacock-pink);
+      color: white;
+      padding: 14px 32px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 700;
+      margin: 20px 0;
+      cursor: pointer;
+      border: none;
+      font-size: 15px;
+    }
+
+    .cta-button:hover {
+      background: var(--peacock-pink-dark);
+    }
+
+    /* Fashion Site Styles */
+    .fashion-view {
+      display: none;
+      height: 100vh;
+      flex-direction: column;
+    }
+
+    .fashion-view.active {
+      display: flex;
+    }
+
+    .fashion-header {
+      background: var(--background);
+      border-bottom: 1px solid var(--border);
+      padding: 16px 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .fashion-brand {
+      font-size: 24px;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      color: var(--peacock-pink);
+    }
+
+    .fashion-user {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 14px;
+    }
+
+    .premium-badge {
+      background: linear-gradient(135deg, #FFD700, #FFA500);
+      color: #000;
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 12px;
+    }
+
+    .fashion-body {
+      display: flex;
+      flex: 1;
+      overflow: hidden;
+    }
+
+    .chat-panel {
+      width: 30%;
+      background: var(--background);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .message {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      max-width: 80%;
+    }
+
+    .message.user {
+      align-self: flex-end;
+      align-items: flex-end;
+    }
+
+    .message-bubble {
+      padding: 12px 16px;
+      border-radius: 16px;
+      font-size: 15px;
+    }
+
+    .message.user .message-bubble {
+      background: var(--primary);
+      color: var(--background);
+    }
+
+    .message.agent .message-bubble {
+      background: var(--card);
+      border: 1px solid var(--border);
+      color: var(--foreground);
+    }
+
+    .message-time {
+      font-size: 11px;
+      color: var(--muted);
+      padding: 0 4px;
+    }
+
+    .chips-container {
+      padding: 16px 24px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .chip {
+      background: transparent;
+      border: 1px solid var(--primary);
+      color: var(--primary);
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .chip:hover {
+      background: var(--primary);
+      color: var(--background);
+    }
+
+    .chat-input-container {
+      padding: 16px 24px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      gap: 12px;
+    }
+
+    .chat-input {
+      flex: 1;
+      padding: 12px 16px;
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      font-size: 15px;
+      outline: none;
+      font-family: inherit;
+      background: var(--card);
+      color: var(--foreground);
+    }
+
+    .chat-input:focus {
+      border-color: var(--primary);
+    }
+
+    .send-btn {
+      background: var(--primary);
+      color: var(--background);
+      border: none;
+      padding: 12px 24px;
+      border-radius: 24px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .content-panel {
+      width: 70%;
+      overflow-y: auto;
+      padding: 32px;
+      background: var(--background);
+    }
+
+    .section-header h2 {
+      font-size: 32px;
+      font-weight: 800;
+      color: var(--foreground);
+      margin-bottom: 8px;
+    }
+
+    .section-header p {
+      color: var(--muted);
+      font-size: 16px;
+      margin-bottom: 32px;
+    }
+
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 24px;
+    }
+
+    .product-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .product-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--primary);
+      box-shadow: 0 8px 24px rgba(0, 255, 157, 0.15);
+    }
+
+    .product-image {
+      width: 100%;
+      height: 280px;
+      background: linear-gradient(135deg, var(--secondary) 0%, var(--card) 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 72px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .product-content {
+      padding: 20px;
+    }
+
+    .product-name {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--foreground);
+      margin-bottom: 8px;
+    }
+
+    .product-desc {
+      font-size: 14px;
+      color: var(--muted);
+      margin-bottom: 16px;
+    }
+
+    .product-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .product-price {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+    }
+
+    .price-was {
+      font-size: 14px;
+      color: var(--muted);
+      text-decoration: line-through;
+    }
+
+    .price-now {
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--peacock-pink);
+    }
+
+    .add-to-bag {
+      background: var(--peacock-pink);
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .add-to-bag:hover {
+      background: var(--peacock-pink-dark);
+    }
+
+    .cart-icon {
+      position: relative;
+      cursor: pointer;
+    }
+
+    .cart-count {
+      position: absolute;
+      top: -8px;
+      right: -8px;
+      background: var(--peacock-pink);
+      color: white;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .typing-indicator {
+      display: flex;
+      gap: 4px;
+      padding: 12px 16px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      width: fit-content;
+    }
+
+    .typing-dot {
+      width: 8px;
+      height: 8px;
+      background: var(--primary);
+      border-radius: 50%;
+      animation: typing 1.4s infinite;
+    }
+
+    .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+    .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+    @keyframes typing {
+      0%, 60%, 100% { transform: translateY(0); opacity: 0.7; }
+      30% { transform: translateY(-10px); opacity: 1; }
+    }
+
+    .hidden { display: none !important; }
+  </style>
+</head>
+<body>
+
+  <!-- Gmail View -->
+  <div class="gmail-view" id="gmailView">
+    <div class="gmail-header">
+      <button class="back-btn" style="border:none;background:none;font-size:24px;color:#5F6368;cursor:pointer;">☰</button>
+      <div class="gmail-logo">Gmail</div>
+      <div class="gmail-search">
+        <input type="text" placeholder="Search mail" />
+      </div>
+      <div class="gmail-icons">
+        <span style="cursor:pointer;color:#5F6368;">❓</span>
+        <span style="cursor:pointer;color:#5F6368;">⚙️</span>
+        <span style="cursor:pointer;color:#5F6368;position:relative;">🔔<span style="position:absolute;top:-4px;right:-4px;width:8px;height:8px;background:#EA4335;border-radius:50%;"></span></span>
+        <span style="cursor:pointer;color:#5F6368;">⊞</span>
+        <div class="gmail-avatar">JB</div>
+      </div>
+    </div>
+
+    <div class="gmail-body">
+      <div class="gmail-sidebar">
+        <button class="compose-btn">✏️ Compose</button>
+        <ul class="gmail-nav">
+          <li class="active">📥 Inbox</li>
+          <li>⭐ Starred</li>
+          <li>⏰ Snoozed</li>
+          <li>📤 Sent</li>
+          <li>📝 Drafts</li>
+        </ul>
+      </div>
+
+      <div class="gmail-content">
+        <div class="email-list" id="emailList">
+          <div class="email-item" onclick="openEmail()">
+            <div class="email-avatar">P</div>
+            <div class="email-content">
+              <div class="email-sender">Peacocks Fashion</div>
+              <div class="email-subject"><strong>Jack, Your Spring Wardrobe Awaits</strong> - Exclusive 15% Premium Discount Inside</div>
+            </div>
+            <div class="email-time">9:24 AM</div>
+          </div>
+        </div>
+
+        <div class="email-thread" id="emailThread">
+          <div class="thread-header">
+            <button class="back-btn" onclick="closeEmail()">←</button>
+            <div class="thread-subject">Jack, Your Spring Wardrobe Awaits</div>
+          </div>
+
+          <div class="thread-messages" id="threadMessages">
+            <div class="thread-message">
+              <div class="thread-message-header">
+                <div class="email-avatar" style="width:40px;height:40px;font-size:18px;">P</div>
+                <div class="thread-message-sender">Peacocks Fashion</div>
+                <div class="thread-message-time">9:24 AM</div>
+              </div>
+              <div class="thread-message-body">
+                <div style="text-align:center;margin-bottom:24px;">
+                  <div style="font-size:32px;font-weight:800;color:var(--peacock-pink);margin-bottom:8px;">PEACOCKS</div>
+                  <div style="font-size:14px;color:#666;">WOMENS | MENS | GIRLS | BOYS</div>
+                </div>
+
+                <div style="background:var(--peacock-navy);color:white;padding:16px;text-align:center;border-radius:8px;margin-bottom:24px;">
+                  <strong>SPRING COLLECTION NOW LIVE</strong> - Your Premium Member Discount Applied
+                </div>
+
+                <p style="margin-bottom:16px;">Hi Jack,</p>
+                <p style="margin-bottom:16px;">As a <strong>Peacock Premium member</strong>, you get <strong>15% off</strong> our entire Spring collection - and I've handpicked these styles just for you based on your recent browsing.</p>
+
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:24px 0;">
+                  <div style="text-align:center;">
+                    <div style="background:#f5f5f5;height:160px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:48px;margin-bottom:8px;">👔</div>
+                    <div style="font-weight:700;margin-bottom:4px;">Smart Casual</div>
+                    <div><span style="text-decoration:line-through;color:#999;">£45</span> <strong style="color:var(--peacock-pink);">£38.25</strong></div>
+                  </div>
+                  <div style="text-align:center;">
+                    <div style="background:#f5f5f5;height:160px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:48px;margin-bottom:8px;">👗</div>
+                    <div style="font-weight:700;margin-bottom:4px;">Summer Dress</div>
+                    <div><span style="text-decoration:line-through;color:#999;">£38</span> <strong style="color:var(--peacock-pink);">£32.30</strong></div>
+                  </div>
+                </div>
+
+                <div style="text-align:center;margin:32px 0;">
+                  <button class="cta-button" onclick="goToFashionSite()">VIEW YOUR WARDROBE</button>
+                </div>
+
+                <div style="background:#E3EDFD;padding:16px;border-radius:8px;margin:24px 0;">
+                  <div style="font-weight:700;color:var(--peacock-navy);margin-bottom:8px;">Your Loyalty Status</div>
+                  <div style="display:flex;justify-content:space-between;font-size:14px;color:#666;">
+                    <span>2,450 Points</span>
+                    <span>Next Reward: 500 points away</span>
+                  </div>
+                </div>
+
+                <p style="margin-top:24px;color:#666;font-size:13px;">Questions? Just reply to this email and I'll help you find the perfect outfit.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="reply-box">
+            <textarea class="reply-textarea" id="replyText" placeholder="Reply to Peacocks..."></textarea>
+            <div class="reply-actions">
+              <button class="btn-send" onclick="sendReply()">Send</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Fashion Site View -->
+  <div class="fashion-view" id="fashionView">
+    <div class="fashion-header">
+      <div class="fashion-brand">PEACOCKS</div>
+      <div class="fashion-user">
+        <span>Jack Bolton</span>
+        <span class="premium-badge">PREMIUM</span>
+        <span style="opacity:0.8;">15% Off</span>
+        <div class="cart-icon" onclick="alert('Cart: ' + cartCount + ' items')">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="9" cy="21" r="1"></circle>
+            <circle cx="20" cy="21" r="1"></circle>
+            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+          </svg>
+          <span class="cart-count" id="cartCount">0</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="fashion-body">
+      <div class="chat-panel">
+        <div class="messages" id="fashionMessages"></div>
+        <div class="chips-container" id="chipsContainer"></div>
+        <div class="chat-input-container">
+          <input type="text" class="chat-input" id="fashionInput" placeholder="Tell me what you're looking for..." onkeypress="handleFashionKeyPress(event)" />
+          <button class="send-btn" onclick="sendFashionMessage()">Send</button>
+        </div>
+      </div>
+
+      <div class="content-panel" id="fashionContent">
+        <div class="section-header">
+          <h2>Welcome Back, Jack</h2>
+          <p>Your Premium 15% discount is automatically applied. Tell me what you're shopping for today!</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let currentView = 'gmail';
+    let cartCount = 0;
+    let fashionMessages = [];
+    let currentPhase = 'discovery';
+    let currentCategory = null;
+
+    const products = {
+      menswear: [
+        { id: 1, name: 'Smart Casual Weekend', desc: 'Relaxed fit chinos with premium cotton shirt', was: 45, now: 38.25, emoji: '👔' },
+        { id: 2, name: 'Business Formal Suit', desc: 'Tailored two-piece with modern fit', was: 120, now: 102, emoji: '🤵' },
+        { id: 3, name: 'Sports Leisure Set', desc: 'Comfortable tracksuit for active lifestyles', was: 35, now: 29.75, emoji: '🏃' }
+      ],
+      womenswear: [
+        { id: 4, name: 'Floral Summer Dress', desc: 'Elegant midi dress for any occasion', was: 38, now: 32.30, emoji: '👗' },
+        { id: 5, name: 'Professional Blazer Set', desc: 'Structured blazer with matching trousers', was: 65, now: 55.25, emoji: '💼' },
+        { id: 6, name: 'Casual Weekend Outfit', desc: 'Comfortable jeans with stylish top', was: 42, now: 35.70, emoji: '👚' }
+      ],
+      kids: [
+        { id: 7, name: 'School Uniform Set', desc: 'Complete uniform with polo and trousers', was: 28, now: 23.80, emoji: '🎒' },
+        { id: 8, name: 'Playtime Essentials', desc: 'Comfy t-shirts and shorts', was: 22, now: 18.70, emoji: '⚽' }
+      ],
+      accessories: [
+        { id: 9, name: 'Leather Handbag', desc: 'Stylish everyday bag', was: 48, now: 40.80, emoji: '👜' },
+        { id: 10, name: 'Classic Watch', desc: 'Timeless timepiece', was: 55, now: 46.75, emoji: '⌚' }
+      ]
+    };
+
+    const chips = {
+      discovery: ['Menswear', 'Womenswear', 'Kids', 'Accessories', 'New Arrivals', 'Sale Items'],
+      menswear: ['Smart Casual', 'Formal Wear', 'Sportswear'],
+      womenswear: ['Dresses', 'Work Wear', 'Casual'],
+      kids: ['School Uniform', 'Playwear'],
+      accessories: ['Bags', 'Jewelry', 'Watches']
+    };
+
+    function openEmail() {
+      document.getElementById('emailList').style.display = 'none';
+      document.getElementById('emailThread').classList.add('active');
+    }
+
+    function closeEmail() {
+      document.getElementById('emailList').style.display = 'block';
+      document.getElementById('emailThread').classList.remove('active');
+    }
+
+    function sendReply() {
+      const text = document.getElementById('replyText').value.trim();
+      if (!text) return;
+
+      const messages = document.getElementById('threadMessages');
+
+      // Add user message
+      const userMsg = document.createElement('div');
+      userMsg.className = 'thread-message';
+      userMsg.innerHTML = `
+        <div class="thread-message-header">
+          <div class="gmail-avatar" style="width:40px;height:40px;font-size:14px;background:#3B82F6;">JB</div>
+          <div class="thread-message-sender">Jack Bolton</div>
+          <div class="thread-message-time">Just now</div>
+        </div>
+        <div class="thread-message-body">${text}</div>
+      `;
+      messages.appendChild(userMsg);
+
+      document.getElementById('replyText').value = '';
+
+      // AI response
+      setTimeout(() => {
+        const aiResponse = getEmailResponse(text);
+        const aiMsg = document.createElement('div');
+        aiMsg.className = 'thread-message';
+        aiMsg.innerHTML = `
+          <div class="thread-message-header">
+            <div class="email-avatar" style="width:40px;height:40px;font-size:18px;">P</div>
+            <div class="thread-message-sender">Peacocks Fashion</div>
+            <div class="thread-message-time">Just now</div>
+          </div>
+          <div class="thread-message-body">${aiResponse}</div>
+        `;
+        messages.appendChild(aiMsg);
+        messages.scrollTop = messages.scrollHeight;
+      }, 1500);
+
+      messages.scrollTop = messages.scrollHeight;
+    }
+
+    function getEmailResponse(text) {
+      const lower = text.toLowerCase();
+      if (lower.includes('size') || lower.includes('sizing')) {
+        return "Our collection is available in sizes S through XXXL. We also offer a detailed size guide on each product page. Would you like me to show you items in a specific size?";
+      }
+      if (lower.includes('delivery') || lower.includes('shipping')) {
+        return "We offer Standard Delivery (3-5 days) for £3.99 or Next Day Delivery for £6.99. As a Premium member, you get free standard delivery on orders over £40!";
+      }
+      if (lower.includes('return')) {
+        return "We have a hassle-free 30-day return policy. Simply return any unworn items with tags attached for a full refund. Premium members get free returns!";
+      }
+      return "Thanks for your message! I'm here to help. You can view your personalized wardrobe by clicking the button above, or let me know if you have any specific questions.";
+    }
+
+    function goToFashionSite() {
+      document.getElementById('gmailView').style.display = 'none';
+      document.getElementById('fashionView').classList.add('active');
+      initFashionChat();
+    }
+
+    function initFashionChat() {
+      addFashionMessage("Welcome back, Jack! I've pulled together some styles based on your recent activity. What are you shopping for today?", false);
+      showChips(chips.discovery);
+    }
+
+    function addFashionMessage(text, isUser) {
+      const time = new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+      const container = document.getElementById('fashionMessages');
+
+      const msg = document.createElement('div');
+      msg.className = `message ${isUser ? 'user' : 'agent'}`;
+      msg.innerHTML = `
+        <div class="message-bubble">${text}</div>
+        <div class="message-time">${time}</div>
+      `;
+
+      container.appendChild(msg);
+      container.scrollTop = container.scrollHeight;
+    }
+
+    function showChips(chipList) {
+      const container = document.getElementById('chipsContainer');
+      container.innerHTML = chipList.map(chip =>
+        `<button class="chip" onclick="handleChipClick('${chip}')">${chip}</button>`
+      ).join('');
+    }
+
+    function handleChipClick(chip) {
+      sendFashionMessage(chip);
+    }
+
+    function sendFashionMessage(text) {
+      const input = document.getElementById('fashionInput');
+      const message = text || input.value.trim();
+      if (!message) return;
+
+      addFashionMessage(message, true);
+      input.value = '';
+
+      showTyping();
+
+      setTimeout(() => {
+        hideTyping();
+        processFashionMessage(message);
+      }, 1000);
+    }
+
+    function showTyping() {
+      const container = document.getElementById('fashionMessages');
+      const typing = document.createElement('div');
+      typing.id = 'typing';
+      typing.className = 'message agent';
+      typing.innerHTML = `
+        <div class="typing-indicator">
+          <div class="typing-dot"></div>
+          <div class="typing-dot"></div>
+          <div class="typing-dot"></div>
+        </div>
+      `;
+      container.appendChild(typing);
+      container.scrollTop = container.scrollHeight;
+    }
+
+    function hideTyping() {
+      const typing = document.getElementById('typing');
+      if (typing) typing.remove();
+    }
+
+    function processFashionMessage(msg) {
+      const lower = msg.toLowerCase();
+
+      if (lower.includes('men') || msg === 'Menswear') {
+        currentCategory = 'menswear';
+        currentPhase = 'selection';
+        addFashionMessage("Perfect! Here are our top menswear styles with your 15% Premium discount already applied.", false);
+        showProducts('menswear');
+        showChips(chips.menswear);
+      }
+      else if (lower.includes('women') || msg === 'Womenswear') {
+        currentCategory = 'womenswear';
+        currentPhase = 'selection';
+        addFashionMessage("Great choice! Check out these womenswear styles - all with your Premium discount.", false);
+        showProducts('womenswear');
+        showChips(chips.womenswear);
+      }
+      else if (lower.includes('kid') || msg === 'Kids') {
+        currentCategory = 'kids';
+        currentPhase = 'selection';
+        addFashionMessage("Here are our kids clothing options. Premium discount applied!", false);
+        showProducts('kids');
+        showChips(chips.kids);
+      }
+      else if (lower.includes('access') || msg === 'Accessories') {
+        currentCategory = 'accessories';
+        currentPhase = 'selection';
+        addFashionMessage("Browse our accessories collection. All items include your 15% discount.", false);
+        showProducts('accessories');
+        showChips(chips.accessories);
+      }
+      else {
+        addFashionMessage("I can show you menswear, womenswear, kids clothing, or accessories. What would you like to see?", false);
+        showChips(chips.discovery);
+      }
+    }
+
+    function showProducts(category) {
+      const items = products[category];
+      const categoryNames = {
+        menswear: 'Menswear Collection',
+        womenswear: 'Womenswear Collection',
+        kids: 'Kids Collection',
+        accessories: 'Accessories Collection'
+      };
+
+      const panel = document.getElementById('fashionContent');
+      panel.innerHTML = `
+        <div class="section-header">
+          <h2>${categoryNames[category]}</h2>
+          <p>Your Premium 15% discount is automatically applied</p>
+        </div>
+        <div class="products-grid">
+          ${items.map(item => `
+            <div class="product-card">
+              <div class="product-image">${item.emoji}</div>
+              <div class="product-content">
+                <div class="product-name">${item.name}</div>
+                <div class="product-desc">${item.desc}</div>
+                <div class="product-footer">
+                  <div class="product-price">
+                    <span class="price-was">£${item.was}</span>
+                    <span class="price-now">£${item.now}</span>
+                  </div>
+                  <button class="add-to-bag" onclick="addToCart(${item.id})">Add to Bag</button>
+                </div>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      `;
+    }
+
+    function addToCart(id) {
+      cartCount++;
+      document.getElementById('cartCount').textContent = cartCount;
+      addFashionMessage("Great choice! Item added to your bag. Your Premium discount will be applied at checkout.", false);
+    }
+
+    function handleFashionKeyPress(event) {
+      if (event.key === 'Enter') {
+        sendFashionMessage();
+      }
+    }
+  </script>
+
+</body>
+</html>
