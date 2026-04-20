@@ -69,6 +69,118 @@
       gap: 32px;
     }
 
+    .edit-mode-toggle {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: #0D9DDA;
+      color: white;
+      border: none;
+      padding: 16px 24px;
+      border-radius: 50px;
+      font-weight: 700;
+      font-size: 14px;
+      cursor: pointer;
+      box-shadow: 0 4px 16px rgba(13, 157, 218, 0.4);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.3s ease;
+    }
+
+    .edit-mode-toggle:hover {
+      background: #0B827C;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(13, 157, 218, 0.5);
+    }
+
+    .edit-mode-toggle.active {
+      background: #4CAF50;
+    }
+
+    .editable {
+      position: relative;
+    }
+
+    .edit-mode .editable:hover {
+      outline: 2px dashed #0D9DDA;
+      outline-offset: 4px;
+      cursor: text;
+    }
+
+    .edit-mode .editable::after {
+      content: '✏️ Click to edit';
+      position: absolute;
+      top: -24px;
+      left: 0;
+      background: #0D9DDA;
+      color: white;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      pointer-events: none;
+    }
+
+    .edit-mode .editable:hover::after {
+      opacity: 1;
+    }
+
+    .save-notice {
+      position: fixed;
+      bottom: 90px;
+      right: 24px;
+      background: #4CAF50;
+      color: white;
+      padding: 12px 20px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.3s ease;
+      z-index: 1000;
+    }
+
+    .save-notice.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .download-btn {
+      position: fixed;
+      bottom: 24px;
+      left: 24px;
+      background: rgba(11, 130, 124, 0.9);
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 50px;
+      font-weight: 600;
+      font-size: 13px;
+      cursor: pointer;
+      box-shadow: 0 4px 16px rgba(11, 130, 124, 0.4);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.3s ease;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .edit-mode .download-btn {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .download-btn:hover {
+      background: rgba(11, 130, 124, 1);
+      transform: translateY(-2px);
+    }
+
     .stat {
       text-align: center;
     }
@@ -631,23 +743,23 @@
   <div class="header">
     <div class="header-content">
       <div class="header-title">
-        <h1>🎉 UKI Social Calendar 2026</h1>
+        <h1 class="editable" contenteditable="false">🎉 UKI Social Calendar 2026</h1>
         <div class="location-badge">
           <span class="material-icons" style="font-size:16px;">place</span>
-          Heron Tower & Around
+          <span class="editable" contenteditable="false">Heron Tower & Around</span>
         </div>
       </div>
       <div class="header-stats">
         <div class="stat">
-          <div class="stat-value">80</div>
+          <div class="stat-value editable" contenteditable="false">80</div>
           <div class="stat-label">Team Size</div>
         </div>
         <div class="stat">
-          <div class="stat-value">£2,400</div>
+          <div class="stat-value editable" contenteditable="false">£2,400</div>
           <div class="stat-label">Budget</div>
         </div>
         <div class="stat">
-          <div class="stat-value">11</div>
+          <div class="stat-value editable" contenteditable="false">11</div>
           <div class="stat-label">Partners</div>
         </div>
       </div>
@@ -657,8 +769,8 @@
   <!-- Hero -->
   <div class="hero">
     <div class="hero-content">
-      <h2>Let's Connect & Celebrate Together</h2>
-      <p>Your complete guide to team events, partner gatherings, and social activities throughout 2026</p>
+      <h2 class="editable" contenteditable="false">Let's Connect & Celebrate Together</h2>
+      <p class="editable" contenteditable="false">Your complete guide to team events, partner gatherings, and social activities throughout 2026</p>
       <div class="hero-actions">
         <button class="btn btn-primary" onclick="scrollToEvents()">View All Events</button>
         <button class="btn btn-secondary" onclick="showBudget()">Budget Overview</button>
@@ -1180,7 +1292,110 @@
     </div>
   </div>
 
+  <!-- Edit Mode Toggle -->
+  <button class="edit-mode-toggle" id="editToggle" onclick="toggleEditMode()">
+    <span class="material-icons" style="font-size:18px;">edit</span>
+    Enable Editing
+  </button>
+
+  <!-- Download Button -->
+  <button class="download-btn" onclick="downloadHTML()">
+    <span class="material-icons" style="font-size:18px;">download</span>
+    Download HTML
+  </button>
+
+  <div class="save-notice" id="saveNotice">✓ Changes saved automatically</div>
+
   <script>
+    let editMode = false;
+
+    function toggleEditMode() {
+      editMode = !editMode;
+      const button = document.getElementById('editToggle');
+      const body = document.body;
+
+      if (editMode) {
+        body.classList.add('edit-mode');
+        button.classList.add('active');
+        button.innerHTML = '<span class="material-icons" style="font-size:18px;">check</span> Editing Enabled';
+
+        // Enable all editable elements
+        document.querySelectorAll('.editable').forEach(el => {
+          el.contentEditable = 'true';
+          el.addEventListener('input', saveChanges);
+        });
+
+        // Also make event cards editable
+        document.querySelectorAll('.event-title, .event-detail span:last-child').forEach(el => {
+          el.classList.add('editable');
+          el.contentEditable = 'true';
+          el.addEventListener('input', saveChanges);
+        });
+      } else {
+        body.classList.remove('edit-mode');
+        button.classList.remove('active');
+        button.innerHTML = '<span class="material-icons" style="font-size:18px;">edit</span> Enable Editing';
+
+        // Disable all editable elements
+        document.querySelectorAll('.editable').forEach(el => {
+          el.contentEditable = 'false';
+          el.removeEventListener('input', saveChanges);
+        });
+      }
+    }
+
+    function saveChanges() {
+      // Show save notification
+      const notice = document.getElementById('saveNotice');
+      notice.classList.add('show');
+
+      // Save to localStorage
+      const pageContent = document.documentElement.innerHTML;
+      localStorage.setItem('socialCalendarContent', pageContent);
+
+      setTimeout(() => {
+        notice.classList.remove('show');
+      }, 2000);
+    }
+
+    function downloadHTML() {
+      // Get current page HTML
+      const html = document.documentElement.outerHTML;
+
+      // Create a blob
+      const blob = new Blob([html], { type: 'text/html' });
+
+      // Create download link
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'social-calendar-edited.html';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+
+      // Show notification
+      const notice = document.getElementById('saveNotice');
+      notice.textContent = '✓ HTML file downloaded!';
+      notice.classList.add('show');
+      setTimeout(() => {
+        notice.classList.remove('show');
+        notice.textContent = '✓ Changes saved automatically';
+      }, 3000);
+    }
+
+    // Load saved content on page load
+    window.addEventListener('DOMContentLoaded', () => {
+      const saved = localStorage.getItem('socialCalendarContent');
+      if (saved) {
+        // Only restore if user wants to
+        if (confirm('Restore your previous edits?')) {
+          document.documentElement.innerHTML = saved;
+        }
+      }
+    });
+
     const events = {
       'eoq-celebration': {
         title: '🎊 EOQ Celebration',
