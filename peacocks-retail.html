@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Peacocks Fashion - Email to Commerce</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #ffffff;
+      color: #000000;
+      line-height: 1.6;
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: #f1f1f1; }
+    ::-webkit-scrollbar-thumb { background: #FF9EC8; border-radius: 4px; }
+
+    /* Marquee Banner */
+    .marquee-banner {
+      background: #000000;
+      color: white;
+      padding: 8px 0;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+
+    .marquee-content {
+      display: inline-block;
+      animation: marquee 20s linear infinite;
+    }
+
+    @keyframes marquee {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    /* Gmail Styles */
+    .gmail-view { display: flex; flex-direction: column; height: 100vh; background: #fff; }
+    .gmail-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 12px 16px;
+      border-bottom: 1px solid #e0e0e0;
+    }
+    .gmail-logo { font-size: 22px; font-weight: 700; color: #EA4335; }
+    .gmail-search {
+      flex: 1;
+      max-width: 720px;
+      margin: 0 auto;
+    }
+    .gmail-search input {
+      width: 100%;
+      padding: 12px 16px;
+      border-radius: 8px;
+      border: none;
+      background: #F1F3F4;
+      font-size: 14px;
+    }
+    .gmail-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: #3B82F6;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 600;
+      font-size: 14px;
+    }
+    .gmail-body { display: flex; flex: 1; overflow: hidden; }
+    .gmail-sidebar {
+      width: 240px;
+      padding: 16px 8px;
+      border-right: 1px solid #e0e0e0;
+      background: #F6F8FC;
+    }
+    .compose-btn {
+      background: #C2E7FF;
+      color: #001D35;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      width: 100%;
+      margin-bottom: 16px;
+    }
+    .gmail-nav { list-style: none; }
+    .gmail-nav li {
+      padding: 8px 16px;
+      border-radius: 0 16px 16px 0;
+      cursor: pointer;
+      font-size: 14px;
+      margin-bottom: 4px;
+    }
+    .gmail-nav li:hover { background: #e8e8e8; }
+    .gmail-nav li.active { background: #D3E3FD; font-weight: 600; }
+    .gmail-content { flex: 1; display: flex; flex-direction: column; background: white; }
+    .email-list { flex: 1; overflow-y: auto; }
+    .email-item {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 12px 16px;
+      border-bottom: 1px solid #e0e0e0;
+      cursor: pointer;
+    }
+    .email-item:hover { background: #f8f9fa; }
+    .email-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #FF9EC8, #B967D0);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 700;
+      font-size: 18px;
+    }
+    .email-content { flex: 1; min-width: 0; }
+    .email-sender { font-weight: 600; font-size: 14px; }
+    .email-subject {
+      font-size: 13px;
+      color: #5F6368;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .email-thread { display: none; flex-direction: column; height: 100%; }
+    .email-thread.active { display: flex; }
+    .thread-header {
+      padding: 16px;
+      border-bottom: 1px solid #e0e0e0;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .back-btn {
+      background: none;
+      border: none;
+      font-size: 20px;
+      cursor: pointer;
+      color: #5F6368;
+    }
+    .thread-messages { flex: 1; overflow-y: auto; padding: 24px; }
+    .thread-message {
+      background: white;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 16px;
+    }
+    .thread-message-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .reply-box { padding: 16px; border-top: 1px solid #e0e0e0; }
+    .reply-textarea {
+      width: 100%;
+      min-height: 100px;
+      padding: 12px;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 14px;
+      resize: vertical;
+    }
+    .btn-send {
+      background: #FF9EC8;
+      color: white;
+      border: none;
+      padding: 10px 24px;
+      border-radius: 4px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 8px;
+    }
+    .btn-send:hover { background: #ff6ba8; }
+    .cta-button {
+      display: inline-block;
+      background: #FF9EC8;
+      color: white;
+      padding: 14px 32px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 700;
+      margin: 20px 0;
+      cursor: pointer;
+      border: none;
+      font-size: 15px;
+    }
+    .cta-button:hover { background: #ff6ba8; }
+
+    /* Peacocks Site */
+    .peacocks-view { display: none; flex-direction: column; height: 100vh; }
+    .peacocks-view.active { display: flex; }
+
+    .peacocks-header {
+      background: white;
+      border-bottom: 1px solid #e0e0e0;
+    }
+    .peacocks-header-main {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 20px 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .peacocks-logo {
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+      color: #000;
+    }
+    .header-search {
+      flex: 1;
+      max-width: 500px;
+      margin: 0 40px;
+      position: relative;
+    }
+    .header-search input {
+      width: 100%;
+      padding: 12px 16px 12px 40px;
+      border: 1px solid #e0e0e0;
+      border-radius: 24px;
+      font-size: 14px;
+    }
+    .search-icon {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #666;
+    }
+    .header-icons {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+    }
+    .icon-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 8px;
+      border-radius: 50%;
+      position: relative;
+    }
+    .icon-btn:hover { background: #f0f0f0; }
+    .cart-badge {
+      position: absolute;
+      top: 4px;
+      right: 4px;
+      background: #FF9EC8;
+      color: white;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      font-size: 11px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .peacocks-nav {
+      background: white;
+      border-bottom: 1px solid #e0e0e0;
+      padding: 0 32px;
+    }
+    .peacocks-nav-inner {
+      max-width: 1440px;
+      margin: 0 auto;
+      display: flex;
+      gap: 32px;
+    }
+    .nav-link {
+      padding: 16px 0;
+      text-decoration: none;
+      color: #000;
+      font-weight: 600;
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      border-bottom: 3px solid transparent;
+    }
+    .nav-link:hover { border-bottom-color: #FF9EC8; }
+
+    .peacocks-body {
+      display: flex;
+      flex: 1;
+      overflow: hidden;
+    }
+    .chat-panel {
+      width: 30%;
+      background: white;
+      border-right: 1px solid #e0e0e0;
+      display: flex;
+      flex-direction: column;
+    }
+    .messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .message {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      max-width: 80%;
+    }
+    .message.user { align-self: flex-end; align-items: flex-end; }
+    .message-bubble {
+      padding: 12px 16px;
+      border-radius: 16px;
+      font-size: 15px;
+    }
+    .message.user .message-bubble {
+      background: #FF9EC8;
+      color: white;
+    }
+    .message.agent .message-bubble {
+      background: #F6F8FC;
+      color: #000;
+    }
+    .message-time {
+      font-size: 11px;
+      color: #666;
+      padding: 0 4px;
+    }
+    .chips-container {
+      padding: 16px 24px;
+      border-top: 1px solid #e0e0e0;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .chip {
+      background: white;
+      border: 1px solid #FF9EC8;
+      color: #FF9EC8;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .chip:hover {
+      background: #FF9EC8;
+      color: white;
+    }
+    .chat-input-container {
+      padding: 16px 24px;
+      border-top: 1px solid #e0e0e0;
+      display: flex;
+      gap: 12px;
+    }
+    .chat-input {
+      flex: 1;
+      padding: 12px 16px;
+      border: 1px solid #e0e0e0;
+      border-radius: 24px;
+      font-size: 15px;
+      outline: none;
+      font-family: inherit;
+    }
+    .chat-input:focus { border-color: #FF9EC8; }
+    .send-btn {
+      background: #FF9EC8;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 24px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .send-btn:hover { background: #ff6ba8; }
+
+    .content-panel {
+      width: 70%;
+      overflow-y: auto;
+      padding: 40px;
+      background: #fafafa;
+    }
+    .section-header h2 {
+      font-size: 32px;
+      font-weight: 800;
+      color: #000;
+      margin-bottom: 8px;
+    }
+    .section-header p {
+      color: #666;
+      font-size: 16px;
+      margin-bottom: 32px;
+    }
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 24px;
+    }
+    .product-card {
+      background: white;
+      border: 1px solid #e0e0e0;
+      border-radius: 12px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .product-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(255, 158, 200, 0.2);
+    }
+    .product-image {
+      width: 100%;
+      height: 280px;
+      background: linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 72px;
+      border-bottom: 1px solid #e0e0e0;
+    }
+    .product-content { padding: 20px; }
+    .product-name {
+      font-size: 18px;
+      font-weight: 700;
+      color: #000;
+      margin-bottom: 8px;
+    }
+    .product-desc {
+      font-size: 14px;
+      color: #666;
+      margin-bottom: 16px;
+    }
+    .product-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .product-price {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+    }
+    .price-was {
+      font-size: 14px;
+      color: #999;
+      text-decoration: line-through;
+    }
+    .price-now {
+      font-size: 24px;
+      font-weight: 800;
+      color: #FF9EC8;
+    }
+    .add-to-bag {
+      background: #FF9EC8;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    .add-to-bag:hover { background: #ff6ba8; }
+
+    .hidden { display: none !important; }
+  </style>
+</head>
+<body>
+
+  <!-- Gmail View -->
+  <div class="gmail-view" id="gmailView">
+    <div class="gmail-header">
+      <button class="back-btn" style="border:none;background:none;font-size:24px;">☰</button>
+      <div class="gmail-logo">Gmail</div>
+      <div class="gmail-search">
+        <input type="text" placeholder="Search mail" />
+      </div>
+      <div style="display:flex;gap:8px;align-items:center;margin-left:auto;">
+        <span style="cursor:pointer;">❓</span>
+        <span style="cursor:pointer;">⚙️</span>
+        <span style="cursor:pointer;position:relative;">🔔<span style="position:absolute;top:-4px;right:-4px;width:8px;height:8px;background:#EA4335;border-radius:50%;"></span></span>
+        <div class="gmail-avatar">JB</div>
+      </div>
+    </div>
+
+    <div class="gmail-body">
+      <div class="gmail-sidebar">
+        <button class="compose-btn">✏️ Compose</button>
+        <ul class="gmail-nav">
+          <li class="active">📥 Inbox</li>
+          <li>⭐ Starred</li>
+          <li>📤 Sent</li>
+          <li>📝 Drafts</li>
+        </ul>
+      </div>
+
+      <div class="gmail-content">
+        <div class="email-list" id="emailList">
+          <div class="email-item" onclick="openEmail()">
+            <div class="email-avatar">P</div>
+            <div class="email-content">
+              <div class="email-sender">Peacocks Fashion</div>
+              <div class="email-subject"><strong>Jack, Your Spring Collection Awaits</strong> - Premium 15% Discount Inside</div>
+            </div>
+            <div style="font-size:12px;color:#5F6368;">9:24 AM</div>
+          </div>
+        </div>
+
+        <div class="email-thread" id="emailThread">
+          <div class="thread-header">
+            <button class="back-btn" onclick="closeEmail()">←</button>
+            <div style="font-size:20px;font-weight:600;">Jack, Your Spring Collection Awaits</div>
+          </div>
+
+          <div class="thread-messages" id="threadMessages">
+            <div class="thread-message">
+              <div class="thread-message-header">
+                <div class="email-avatar">P</div>
+                <div style="flex:1;font-weight:600;">Peacocks Fashion</div>
+                <div style="font-size:12px;color:#666;">9:24 AM</div>
+              </div>
+              <div>
+                <div style="text-align:center;margin-bottom:24px;">
+                  <div style="font-size:32px;font-weight:800;color:#FF9EC8;margin-bottom:8px;">PEACOCKS</div>
+                  <div style="font-size:14px;color:#666;">WOMENS | MENS | GIRLS | BOYS</div>
+                </div>
+
+                <div style="background:#000;color:white;padding:16px;text-align:center;border-radius:8px;margin-bottom:24px;">
+                  <strong>SPRING COLLECTION NOW LIVE</strong> - Premium Member 15% Off Applied
+                </div>
+
+                <p style="margin-bottom:16px;">Hi Jack,</p>
+                <p style="margin-bottom:16px;">Your <strong>Premium membership</strong> gives you <strong>15% off</strong> our entire Spring collection. I've handpicked these styles based on your browsing history.</p>
+
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:24px 0;">
+                  <div style="text-align:center;">
+                    <div style="background:#f5f5f5;height:160px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:48px;margin-bottom:8px;">👔</div>
+                    <div style="font-weight:700;margin-bottom:4px;">Smart Casual Weekend</div>
+                    <div><span style="text-decoration:line-through;color:#999;">£45</span> <strong style="color:#FF9EC8;">£38.25</strong></div>
+                  </div>
+                  <div style="text-align:center;">
+                    <div style="background:#f5f5f5;height:160px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:48px;margin-bottom:8px;">👗</div>
+                    <div style="font-weight:700;margin-bottom:4px;">Summer Dress</div>
+                    <div><span style="text-decoration:line-through;color:#999;">£38</span> <strong style="color:#FF9EC8;">£32.30</strong></div>
+                  </div>
+                </div>
+
+                <div style="text-align:center;margin:32px 0;">
+                  <button class="cta-button" onclick="goToShop()">VIEW YOUR COLLECTION</button>
+                </div>
+
+                <p style="margin-top:24px;color:#666;font-size:13px;">Questions? Just reply and I'll help you find the perfect outfit.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="reply-box">
+            <textarea class="reply-textarea" id="replyText" placeholder="Reply to Peacocks..."></textarea>
+            <button class="btn-send" onclick="sendReply()">Send</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Peacocks Site -->
+  <div class="peacocks-view" id="peacocksView">
+    <div class="marquee-banner">
+      <div class="marquee-content">
+        <span style="padding:0 40px;font-size:11px;letter-spacing:0.05em;font-weight:600;">SPRING COLLECTION NOW LIVE</span>
+        <span style="padding:0 40px;font-size:11px;letter-spacing:0.05em;font-weight:600;">FREE DELIVERY OVER £40</span>
+        <span style="padding:0 40px;font-size:11px;letter-spacing:0.05em;font-weight:600;">SPRING COLLECTION NOW LIVE</span>
+        <span style="padding:0 40px;font-size:11px;letter-spacing:0.05em;font-weight:600;">FREE DELIVERY OVER £40</span>
+      </div>
+    </div>
+
+    <div class="peacocks-header">
+      <div class="peacocks-header-main">
+        <div class="peacocks-logo">PEACOCKS</div>
+        <div class="header-search">
+          <span class="search-icon">🔍</span>
+          <input type="text" placeholder="Search..." />
+        </div>
+        <div class="header-icons">
+          <button class="icon-btn">👤</button>
+          <button class="icon-btn">❤️</button>
+          <button class="icon-btn">
+            🛒
+            <span class="cart-badge" id="cartBadge">0</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="peacocks-nav">
+      <div class="peacocks-nav-inner">
+        <a href="#" class="nav-link">WOMENS</a>
+        <a href="#" class="nav-link">MENS</a>
+        <a href="#" class="nav-link">GIRLS</a>
+        <a href="#" class="nav-link">BOYS</a>
+        <a href="#" class="nav-link">SALE</a>
+      </div>
+    </div>
+
+    <div class="peacocks-body">
+      <div class="chat-panel">
+        <div class="messages" id="peacocksMessages"></div>
+        <div class="chips-container" id="peacocksChips"></div>
+        <div class="chat-input-container">
+          <input type="text" class="chat-input" id="peacocksInput" placeholder="How can I help you today?" onkeypress="handleKeyPress(event)" />
+          <button class="send-btn" onclick="sendMessage()">Send</button>
+        </div>
+      </div>
+
+      <div class="content-panel" id="peacocksContent">
+        <div class="section-header">
+          <h2>Welcome Back, Jack</h2>
+          <p>Your Premium 15% discount is automatically applied. What are you shopping for today?</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let cartCount = 0;
+    const products = {
+      menswear: [
+        { id: 1, name: 'Smart Casual Weekend', desc: 'Relaxed fit chinos with premium shirt', was: 45, now: 38.25, emoji: '👔' },
+        { id: 2, name: 'Business Formal Suit', desc: 'Tailored two-piece with modern fit', was: 120, now: 102, emoji: '🤵' },
+        { id: 3, name: 'Sports Leisure Set', desc: 'Comfortable tracksuit', was: 35, now: 29.75, emoji: '🏃' }
+      ],
+      womenswear: [
+        { id: 4, name: 'Floral Summer Dress', desc: 'Elegant midi dress', was: 38, now: 32.30, emoji: '👗' },
+        { id: 5, name: 'Professional Blazer', desc: 'Structured blazer set', was: 65, now: 55.25, emoji: '💼' },
+        { id: 6, name: 'Casual Weekend', desc: 'Comfortable jeans with top', was: 42, now: 35.70, emoji: '👚' }
+      ]
+    };
+
+    const chips = {
+      discovery: ['Menswear', 'Womenswear', 'Kids', 'Accessories', 'New Arrivals', 'Sale'],
+      menswear: ['Smart Casual', 'Formal Wear', 'Sportswear'],
+      womenswear: ['Dresses', 'Work Wear', 'Casual']
+    };
+
+    function openEmail() {
+      document.getElementById('emailList').style.display = 'none';
+      document.getElementById('emailThread').classList.add('active');
+    }
+
+    function closeEmail() {
+      document.getElementById('emailList').style.display = 'block';
+      document.getElementById('emailThread').classList.remove('active');
+    }
+
+    function sendReply() {
+      const text = document.getElementById('replyText').value.trim();
+      if (!text) return;
+
+      const container = document.getElementById('threadMessages');
+      const userMsg = `<div class="thread-message">
+        <div class="thread-message-header">
+          <div class="gmail-avatar">JB</div>
+          <div style="flex:1;font-weight:600;">Jack Bolton</div>
+          <div style="font-size:12px;color:#666;">Just now</div>
+        </div>
+        <div>${text}</div>
+      </div>`;
+      container.innerHTML += userMsg;
+
+      document.getElementById('replyText').value = '';
+
+      setTimeout(() => {
+        const aiMsg = `<div class="thread-message">
+          <div class="thread-message-header">
+            <div class="email-avatar">P</div>
+            <div style="flex:1;font-weight:600;">Peacocks Fashion</div>
+            <div style="font-size:12px;color:#666;">Just now</div>
+          </div>
+          <div>Thanks for your message! Our collection features sizes S-XXXL with free returns for Premium members. Click "VIEW YOUR COLLECTION" above to start shopping!</div>
+        </div>`;
+        container.innerHTML += aiMsg;
+        container.scrollTop = container.scrollHeight;
+      }, 1500);
+
+      container.scrollTop = container.scrollHeight;
+    }
+
+    function goToShop() {
+      document.getElementById('gmailView').style.display = 'none';
+      document.getElementById('peacocksView').classList.add('active');
+      initChat();
+    }
+
+    function initChat() {
+      addMessage("Welcome back, Jack! Your Premium 15% discount is active. What are you looking for today?", false);
+      showChips(chips.discovery);
+    }
+
+    function addMessage(text, isUser) {
+      const container = document.getElementById('peacocksMessages');
+      const time = new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+
+      const msg = document.createElement('div');
+      msg.className = `message ${isUser ? 'user' : 'agent'}`;
+      msg.innerHTML = `
+        <div class="message-bubble">${text}</div>
+        <div class="message-time">${time}</div>
+      `;
+      container.appendChild(msg);
+      container.scrollTop = container.scrollHeight;
+    }
+
+    function showChips(chipList) {
+      const container = document.getElementById('peacocksChips');
+      container.innerHTML = chipList.map(chip =>
+        `<button class="chip" onclick="handleChip('${chip}')">${chip}</button>`
+      ).join('');
+    }
+
+    function handleChip(chip) {
+      sendMessage(chip);
+    }
+
+    function sendMessage(text) {
+      const input = document.getElementById('peacocksInput');
+      const message = text || input.value.trim();
+      if (!message) return;
+
+      addMessage(message, true);
+      input.value = '';
+
+      setTimeout(() => {
+        processMessage(message);
+      }, 800);
+    }
+
+    function processMessage(msg) {
+      const lower = msg.toLowerCase();
+
+      if (lower.includes('men') || msg === 'Menswear') {
+        addMessage("Perfect! Here are our top menswear styles with your 15% Premium discount applied.", false);
+        showProducts('menswear');
+        showChips(chips.menswear);
+      }
+      else if (lower.includes('women') || msg === 'Womenswear') {
+        addMessage("Great choice! Browse our womenswear collection with your Premium discount.", false);
+        showProducts('womenswear');
+        showChips(chips.womenswear);
+      }
+      else {
+        addMessage("I can show you menswear, womenswear, kids clothing, or accessories. What interests you?", false);
+        showChips(chips.discovery);
+      }
+    }
+
+    function showProducts(category) {
+      const items = products[category];
+      const names = { menswear: 'Menswear', womenswear: 'Womenswear' };
+
+      const panel = document.getElementById('peacocksContent');
+      panel.innerHTML = `
+        <div class="section-header">
+          <h2>${names[category]} Collection</h2>
+          <p>Your Premium 15% discount is automatically applied</p>
+        </div>
+        <div class="products-grid">
+          ${items.map(item => `
+            <div class="product-card">
+              <div class="product-image">${item.emoji}</div>
+              <div class="product-content">
+                <div class="product-name">${item.name}</div>
+                <div class="product-desc">${item.desc}</div>
+                <div class="product-footer">
+                  <div class="product-price">
+                    <span class="price-was">£${item.was}</span>
+                    <span class="price-now">£${item.now}</span>
+                  </div>
+                  <button class="add-to-bag" onclick="addToCart()">Add to Bag</button>
+                </div>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      `;
+    }
+
+    function addToCart() {
+      cartCount++;
+      document.getElementById('cartBadge').textContent = cartCount;
+      addMessage("Item added to your bag! Your Premium discount will be applied at checkout.", false);
+    }
+
+    function handleKeyPress(event) {
+      if (event.key === 'Enter') {
+        sendMessage();
+      }
+    }
+  </script>
+
+</body>
+</html>
