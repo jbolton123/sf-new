@@ -630,6 +630,200 @@
     }
     .cart-overlay.active { display: block; }
 
+    /* Checkout View */
+    .checkout-view {
+      display: none;
+      height: 100vh;
+      overflow-y: auto;
+      background: #fafafa;
+    }
+    .checkout-view.active { display: block; }
+    .checkout-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 40px;
+    }
+    .checkout-header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+    .checkout-header h1 {
+      font-size: 32px;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+    .checkout-grid {
+      display: grid;
+      grid-template-columns: 1fr 400px;
+      gap: 40px;
+    }
+    .checkout-form {
+      background: white;
+      padding: 32px;
+      border-radius: 12px;
+      border: 1px solid #e0e0e0;
+    }
+    .form-section {
+      margin-bottom: 32px;
+    }
+    .form-section h3 {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+    .form-group {
+      margin-bottom: 16px;
+    }
+    .form-group label {
+      display: block;
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: #333;
+    }
+    .form-group input {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      font-size: 14px;
+      font-family: inherit;
+    }
+    .form-group input:focus {
+      outline: none;
+      border-color: #FF9EC8;
+    }
+    .checkout-summary {
+      background: white;
+      padding: 32px;
+      border-radius: 12px;
+      border: 1px solid #e0e0e0;
+      height: fit-content;
+      position: sticky;
+      top: 20px;
+    }
+    .summary-items {
+      margin-bottom: 24px;
+      max-height: 300px;
+      overflow-y: auto;
+    }
+    .summary-item {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+    .summary-item-image {
+      width: 60px;
+      height: 60px;
+      border-radius: 8px;
+      overflow: hidden;
+      background: #f5f5f5;
+    }
+    .summary-item-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .summary-totals {
+      border-top: 2px solid #e0e0e0;
+      padding-top: 16px;
+    }
+    .summary-line {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      font-size: 15px;
+    }
+    .summary-line.total {
+      font-size: 20px;
+      font-weight: 800;
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid #e0e0e0;
+    }
+    .pay-btn {
+      width: 100%;
+      background: #FF9EC8;
+      color: white;
+      border: none;
+      padding: 16px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 16px;
+      cursor: pointer;
+      margin-top: 24px;
+    }
+    .pay-btn:hover { background: #ff6ba8; }
+
+    /* Payment Failed View */
+    .payment-failed-view {
+      display: none;
+      height: 100vh;
+      background: #fafafa;
+    }
+    .payment-failed-view.active { display: flex; align-items: center; justify-content: center; }
+    .payment-failed-container {
+      max-width: 600px;
+      background: white;
+      padding: 48px;
+      border-radius: 12px;
+      text-align: center;
+      border: 1px solid #e0e0e0;
+    }
+    .failed-icon {
+      width: 80px;
+      height: 80px;
+      background: #FFE5E5;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 24px;
+      font-size: 40px;
+      color: #DC2626;
+    }
+    .payment-failed-container h2 {
+      font-size: 28px;
+      font-weight: 800;
+      margin-bottom: 16px;
+      color: #DC2626;
+    }
+    .payment-failed-container p {
+      font-size: 16px;
+      color: #666;
+      margin-bottom: 32px;
+      line-height: 1.6;
+    }
+    .btn-retry {
+      background: #FF9EC8;
+      color: white;
+      border: none;
+      padding: 14px 32px;
+      border-radius: 8px;
+      font-weight: 700;
+      cursor: pointer;
+      font-size: 16px;
+      margin-right: 12px;
+    }
+    .btn-retry:hover { background: #ff6ba8; }
+    .btn-back-gmail {
+      background: white;
+      color: #333;
+      border: 2px solid #e0e0e0;
+      padding: 14px 32px;
+      border-radius: 8px;
+      font-weight: 700;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    .btn-back-gmail:hover { background: #f5f5f5; }
+
     .hidden { display: none !important; }
   </style>
 </head>
@@ -710,14 +904,14 @@
                 <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:24px 0;">
                   <div style="text-align:center;">
                     <div style="background:#f5f5f5;height:160px;border-radius:8px;overflow:hidden;margin-bottom:8px;">
-                      <img src="https://images.peacocks.co.uk/i/peacocks/010824-73262-M?$plp_large$" alt="Smart Casual" style="width:100%;height:100%;object-fit:cover;" />
+                      <img src="https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=400&h=500&fit=crop" alt="Smart Casual" style="width:100%;height:100%;object-fit:cover;" />
                     </div>
                     <div style="font-weight:700;margin-bottom:4px;">Smart Casual Shirt</div>
                     <div><span style="text-decoration:line-through;color:#999;">£25</span> <strong style="color:#FF9EC8;">£21.25</strong></div>
                   </div>
                   <div style="text-align:center;">
                     <div style="background:#f5f5f5;height:160px;border-radius:8px;overflow:hidden;margin-bottom:8px;">
-                      <img src="https://images.peacocks.co.uk/i/peacocks/010824-72999-M?$plp_large$" alt="Summer Dress" style="width:100%;height:100%;object-fit:cover;" />
+                      <img src="https://images.unsplash.com/photo-1572804013309-59a88b7e92f1?w=400&h=500&fit=crop" alt="Summer Dress" style="width:100%;height:100%;object-fit:cover;" />
                     </div>
                     <div style="font-weight:700;margin-bottom:4px;">Floral Midi Dress</div>
                     <div><span style="text-decoration:line-through;color:#999;">£32</span> <strong style="color:#FF9EC8;">£27.20</strong></div>
@@ -800,6 +994,113 @@
     </div>
   </div>
 
+  <!-- Checkout View -->
+  <div class="checkout-view" id="checkoutView">
+    <div class="checkout-container">
+      <div class="checkout-header">
+        <div class="peacocks-logo" style="margin-bottom:16px;">PEACOCKS</div>
+        <h1>Secure Checkout</h1>
+        <p style="color:#666;">Complete your order with your Premium 15% discount applied</p>
+      </div>
+
+      <div class="checkout-grid">
+        <div class="checkout-form">
+          <div class="form-section">
+            <h3>Contact Information</h3>
+            <div class="form-group">
+              <label>Email</label>
+              <input type="email" value="jack.bolton@email.com" />
+            </div>
+          </div>
+
+          <div class="form-section">
+            <h3>Shipping Address</h3>
+            <div class="form-row">
+              <div class="form-group">
+                <label>First Name</label>
+                <input type="text" value="Jack" />
+              </div>
+              <div class="form-group">
+                <label>Last Name</label>
+                <input type="text" value="Bolton" />
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Address</label>
+              <input type="text" placeholder="Street address" />
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>City</label>
+                <input type="text" placeholder="City" />
+              </div>
+              <div class="form-group">
+                <label>Postcode</label>
+                <input type="text" placeholder="Postcode" />
+              </div>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <h3>Payment Details</h3>
+            <div class="form-group">
+              <label>Card Number</label>
+              <input type="text" placeholder="1234 5678 9012 3456" id="cardNumber" />
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Expiry Date</label>
+                <input type="text" placeholder="MM/YY" />
+              </div>
+              <div class="form-group">
+                <label>CVV</label>
+                <input type="text" placeholder="123" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="checkout-summary">
+          <h3 style="margin-bottom:20px;">Order Summary</h3>
+          <div class="summary-items" id="summaryItems"></div>
+          <div class="summary-totals">
+            <div class="summary-line">
+              <span>Subtotal</span>
+              <span id="summarySubtotal">£0.00</span>
+            </div>
+            <div class="summary-line" style="color:#00a650;font-weight:600;">
+              <span>Premium Discount (15%)</span>
+              <span id="summaryDiscount">-£0.00</span>
+            </div>
+            <div class="summary-line">
+              <span>Shipping</span>
+              <span>FREE</span>
+            </div>
+            <div class="summary-line total">
+              <span>Total</span>
+              <span id="summaryTotal">£0.00</span>
+            </div>
+          </div>
+          <button class="pay-btn" onclick="processPayment()">Complete Payment</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Payment Failed View -->
+  <div class="payment-failed-view" id="paymentFailedView">
+    <div class="payment-failed-container">
+      <div class="failed-icon">⚠️</div>
+      <h2>Payment Failed</h2>
+      <p>We couldn't process your payment. Your items are saved in your cart and we've sent you an email with a quick link to complete your purchase.</p>
+      <p style="font-size:14px;color:#999;margin-bottom:32px;">Check your inbox for a personalized message from our AI stylist.</p>
+      <div>
+        <button class="btn-retry" onclick="retryPayment()">Try Again</button>
+        <button class="btn-back-gmail" onclick="backToGmail()">Check Email</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Shopping Cart Panel -->
   <div class="cart-overlay" id="cartOverlay" onclick="toggleCart()"></div>
   <div class="cart-panel" id="cartPanel">
@@ -823,7 +1124,7 @@
         <span>Total</span>
         <span id="cartTotal">£0.00</span>
       </div>
-      <button class="checkout-btn">Proceed to Checkout</button>
+      <button class="checkout-btn" onclick="goToCheckout()">Proceed to Checkout</button>
     </div>
   </div>
 
@@ -832,14 +1133,14 @@
     let cartItems = [];
     const products = {
       menswear: [
-        { id: 1, name: 'Smart Casual Shirt', desc: 'Oxford cotton shirt in blue', was: 25, now: 21.25, image: 'https://images.peacocks.co.uk/i/peacocks/010824-73262-M?$plp_large$' },
-        { id: 2, name: 'Slim Fit Chinos', desc: 'Stone beige stretch chinos', was: 28, now: 23.80, image: 'https://images.peacocks.co.uk/i/peacocks/010824-73155-M?$plp_large$' },
-        { id: 3, name: 'Navy Polo Shirt', desc: 'Classic fit cotton polo', was: 18, now: 15.30, image: 'https://images.peacocks.co.uk/i/peacocks/010824-73248-M?$plp_large$' }
+        { id: 1, name: 'Smart Casual Shirt', desc: 'Oxford cotton shirt in blue', was: 25, now: 21.25, image: 'https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=400&h=500&fit=crop' },
+        { id: 2, name: 'Slim Fit Chinos', desc: 'Stone beige stretch chinos', was: 28, now: 23.80, image: 'https://images.unsplash.com/photo-1473966968600-fa801b869a1a?w=400&h=500&fit=crop' },
+        { id: 3, name: 'Navy Polo Shirt', desc: 'Classic fit cotton polo', was: 18, now: 15.30, image: 'https://images.unsplash.com/photo-1586790170083-2f9ceadc732d?w=400&h=500&fit=crop' }
       ],
       womenswear: [
-        { id: 4, name: 'Floral Midi Dress', desc: 'Navy floral print dress', was: 32, now: 27.20, image: 'https://images.peacocks.co.uk/i/peacocks/010824-72999-M?$plp_large$' },
-        { id: 5, name: 'Denim Jacket', desc: 'Light wash cropped jacket', was: 35, now: 29.75, image: 'https://images.peacocks.co.uk/i/peacocks/010824-72890-M?$plp_large$' },
-        { id: 6, name: 'Black Leggings', desc: 'High waist stretch leggings', was: 15, now: 12.75, image: 'https://images.peacocks.co.uk/i/peacocks/010824-72845-M?$plp_large$' }
+        { id: 4, name: 'Floral Midi Dress', desc: 'Navy floral print dress', was: 32, now: 27.20, image: 'https://images.unsplash.com/photo-1572804013309-59a88b7e92f1?w=400&h=500&fit=crop' },
+        { id: 5, name: 'Denim Jacket', desc: 'Light wash cropped jacket', was: 35, now: 29.75, image: 'https://images.unsplash.com/photo-1551028719-00167b16eac5?w=400&h=500&fit=crop' },
+        { id: 6, name: 'Black Leggings', desc: 'High waist stretch leggings', was: 15, now: 12.75, image: 'https://images.unsplash.com/photo-1506629082955-511b1aa562c8?w=400&h=500&fit=crop' }
       ]
     };
 
@@ -1043,6 +1344,154 @@
     function toggleCart() {
       document.getElementById('cartPanel').classList.toggle('active');
       document.getElementById('cartOverlay').classList.toggle('active');
+    }
+
+    function goToCheckout() {
+      // Hide everything else
+      document.getElementById('peacocksView').classList.remove('active');
+      document.getElementById('cartPanel').classList.remove('active');
+      document.getElementById('cartOverlay').classList.remove('active');
+
+      // Show checkout
+      document.getElementById('checkoutView').classList.add('active');
+
+      // Populate summary
+      updateCheckoutSummary();
+    }
+
+    function updateCheckoutSummary() {
+      const container = document.getElementById('summaryItems');
+
+      container.innerHTML = cartItems.map(item => `
+        <div class="summary-item">
+          <div class="summary-item-image">
+            <img src="${item.image}" alt="${item.name}" />
+          </div>
+          <div style="flex:1;">
+            <div style="font-weight:600;font-size:14px;margin-bottom:4px;">${item.name}</div>
+            <div style="color:#FF9EC8;font-weight:700;">£${item.price.toFixed(2)}</div>
+          </div>
+        </div>
+      `).join('');
+
+      const subtotal = cartItems.reduce((sum, item) => sum + item.price, 0);
+      const discount = subtotal * 0.15;
+      const total = subtotal - discount;
+
+      document.getElementById('summarySubtotal').textContent = `£${subtotal.toFixed(2)}`;
+      document.getElementById('summaryDiscount').textContent = `-£${discount.toFixed(2)}`;
+      document.getElementById('summaryTotal').textContent = `£${total.toFixed(2)}`;
+    }
+
+    function processPayment() {
+      // Simulate payment processing
+      const btn = event.target;
+      btn.textContent = 'Processing...';
+      btn.disabled = true;
+
+      setTimeout(() => {
+        // Show payment failed
+        document.getElementById('checkoutView').classList.remove('active');
+        document.getElementById('paymentFailedView').classList.add('active');
+
+        // Send abandoned cart email
+        sendAbandonedCartEmail();
+      }, 2000);
+    }
+
+    function sendAbandonedCartEmail() {
+      // In the background, an email would be sent
+      // For demo purposes, we'll add it to the Gmail inbox
+      console.log('Abandoned cart email sent to jack.bolton@email.com');
+    }
+
+    function retryPayment() {
+      document.getElementById('paymentFailedView').classList.remove('active');
+      document.getElementById('checkoutView').classList.add('active');
+
+      // Reset button
+      const btn = document.querySelector('.pay-btn');
+      btn.textContent = 'Complete Payment';
+      btn.disabled = false;
+    }
+
+    function backToGmail() {
+      // Hide everything
+      document.getElementById('paymentFailedView').classList.remove('active');
+      document.getElementById('peacocksView').classList.remove('active');
+
+      // Show Gmail with new abandoned cart email
+      document.getElementById('gmailView').style.display = 'flex';
+
+      // Add abandoned cart email to inbox
+      addAbandonedCartEmail();
+    }
+
+    function addAbandonedCartEmail() {
+      const emailList = document.getElementById('emailList');
+
+      const newEmail = document.createElement('div');
+      newEmail.className = 'email-item';
+      newEmail.onclick = function() { openAbandonedCartEmail(); };
+      newEmail.innerHTML = `
+        <div class="email-avatar">P</div>
+        <div class="email-content">
+          <div class="email-sender">Peacocks Fashion</div>
+          <div class="email-subject"><strong>Don't Miss Out!</strong> Your items are waiting - Complete your order now</div>
+        </div>
+        <div style="font-size:12px;color:#5F6368;">Just now</div>
+      `;
+
+      emailList.insertBefore(newEmail, emailList.firstChild);
+    }
+
+    function openAbandonedCartEmail() {
+      document.getElementById('emailList').style.display = 'none';
+      const threadContainer = document.getElementById('emailThread');
+      threadContainer.classList.add('active');
+
+      // Update thread with abandoned cart message
+      const messagesContainer = document.getElementById('threadMessages');
+      messagesContainer.innerHTML = `
+        <div class="thread-message">
+          <div class="thread-message-header">
+            <div class="email-avatar">P</div>
+            <div style="flex:1;font-weight:600;">Peacocks Fashion AI Stylist</div>
+            <div style="font-size:12px;color:#666;">Just now</div>
+          </div>
+          <div>
+            <div style="text-align:center;margin-bottom:24px;">
+              <div style="font-size:32px;font-weight:800;color:#FF9EC8;margin-bottom:8px;">PEACOCKS</div>
+            </div>
+
+            <p style="margin-bottom:16px;">Hi Jack,</p>
+            <p style="margin-bottom:16px;">I noticed you left some items in your cart! Don't worry - I've saved everything for you, and your <strong>Premium 15% discount is still active</strong>.</p>
+
+            <div style="background:#FFF9E6;border-left:4px solid #FFB020;padding:16px;margin:24px 0;border-radius:4px;">
+              <div style="font-weight:700;margin-bottom:8px;">🎁 Your Saved Items (${cartItems.length})</div>
+              ${cartItems.map(item => `
+                <div style="margin-bottom:8px;">• ${item.name} - <strong style="color:#FF9EC8;">£${item.price.toFixed(2)}</strong></div>
+              `).join('')}
+              <div style="margin-top:12px;padding-top:12px;border-top:1px solid #FFD96B;">
+                <strong>Total with Premium Discount: £${(cartItems.reduce((sum, item) => sum + item.price, 0) * 0.85).toFixed(2)}</strong>
+              </div>
+            </div>
+
+            <p style="margin-bottom:16px;">Complete your purchase now and get <strong>FREE delivery</strong> (usually £3.95)!</p>
+
+            <div style="text-align:center;margin:32px 0;">
+              <button class="cta-button" onclick="returnToCheckout()">COMPLETE MY ORDER</button>
+            </div>
+
+            <p style="color:#666;font-size:13px;">Still need help? Just reply to this email and I'll assist you personally.</p>
+          </div>
+        </div>
+      `;
+    }
+
+    function returnToCheckout() {
+      document.getElementById('gmailView').style.display = 'none';
+      document.getElementById('checkoutView').classList.add('active');
     }
 
     function handleKeyPress(event) {
