@@ -15,10 +15,10 @@
   var _scriptTag = document.querySelector('script[src*="gate.js"]');
   var C = {
     password:   (_scriptTag && _scriptTag.dataset.password) ? _scriptTag.dataset.password : 'SFNBA2026!',
-    workerUrl:  'https://summer-mountain-4569.sdunlop.workers.dev',
-    web3Key:    'ec698e10-6e6a-4c3a-974e-54a7cd7d4343',
-    storeKey:   'nba_visitor_v2',
-    authKey:    'nba_auth_v2'
+    workerUrl:  '',  // Optional: Set up Cloudflare Worker for GitHub logging
+    web3Key:    'ec698e10-6e6a-4c3a-974e-54a7cd7d4343',  // Email alerts via Web3Forms
+    storeKey:   'sf_visitor_v1',
+    authKey:    'sf_auth_v1'
   };
 
   /* ── INJECT GATE HTML ────────────────────────────────────────── */
@@ -203,7 +203,8 @@
                     'Location: ' + loc      + '\n' +
                     'Page:     ' + url      + '\n' +
                     'Device:   ' + ua,
-        from_name:  'NBA Narrative Alert'
+        from_name:  'Peacocks POV Alert',
+        email:      'j.bolton@salesforce.com'  // Your email for notifications
       })
     });
   }

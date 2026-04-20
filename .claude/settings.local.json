@@ -1,0 +1,19 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(unzip -q \"Jack Presentation.pptx\" -d jack_pptx_temp)",
+      "Bash(file image11* image10.png image114.png image115.png image116.png)",
+      "Bash(git init *)",
+      "Bash(git remote *)",
+      "Bash(git branch *)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(git push *)",
+      "Bash(ssh-keyscan github.com)",
+      "Bash(brew install *)",
+      "Bash(gh auth *)",
+      "Bash(gh repo *)",
+      "Bash(gh api *)"
+    ]
+  }
+}
