@@ -13,7 +13,6 @@ const pool = new Pool({
 
 // Middleware
 app.use(express.json());
-app.use(express.static(__dirname));
 
 // Initialize database
 async function initDatabase() {
@@ -214,6 +213,9 @@ app.get('/api/health', async (req, res) => {
     res.status(500).json({ status: 'error', database: 'disconnected', error: err.message });
   }
 });
+
+// Serve static files (after API routes to avoid conflicts)
+app.use(express.static(__dirname));
 
 // Start server
 app.listen(PORT, async () => {
