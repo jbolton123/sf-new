@@ -166,22 +166,25 @@ app.post('/api/events/:id/attendees', async (req, res) => {
     const { id } = req.params;
     const { name, email } = req.body;
 
-    // Check if already registered
+    // Normalize email (lowercase, trim)
+    const normalizedEmail = email.trim().toLowerCase();
+
+    // Check if already registered (case-insensitive)
     const existing = await pool.query(
-      'SELECT * FROM attendees WHERE event_id = $1 AND email = $2',
-      [id, email]
+      'SELECT * FROM attendees WHERE event_id = $1 AND LOWER(email) = $2',
+      [id, normalizedEmail]
     );
 
     if (existing.rows.length > 0) {
-      return res.status(400).json({ error: 'Already registered for this event' });
+      return res.status(400).json({ error: 'You have already RSVP\'d to this event!' });
     }
 
-    // Add attendee
+    // Add attendee (store normalized email)
     const result = await pool.query(`
       INSERT INTO attendees (event_id, name, email)
       VALUES ($1, $2, $3)
       RETURNING *
-    `, [id, name, email]);
+    `, [id, name.trim(), normalizedEmail]);
 
     // Get all attendees for this event
     const attendees = await pool.query(

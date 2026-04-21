@@ -481,7 +481,9 @@
     }
 
     function formatDate(dateStr) {
-      const date = new Date(dateStr);
+      // Parse date as local time, not UTC
+      const [year, month, day] = dateStr.split('-');
+      const date = new Date(year, month - 1, day);
       return date.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
     }
 
@@ -568,6 +570,26 @@
       }
     }
 
+    function checkDuplicateEmail(eventId, email) {
+      const emailTrimmed = email.trim().toLowerCase();
+      const event = events.find(e => e.id === eventId);
+      const attendees = Array.isArray(event.attendees) ? event.attendees : [];
+      const warning = document.getElementById('emailWarning');
+      const rsvpBtn = document.getElementById('rsvpBtn');
+
+      const isDuplicate = attendees.some(a => a.email.toLowerCase() === emailTrimmed);
+
+      if (isDuplicate && emailTrimmed.length > 0) {
+        warning.style.display = 'block';
+        rsvpBtn.disabled = true;
+        rsvpBtn.style.opacity = '0.5';
+      } else {
+        warning.style.display = 'none';
+        rsvpBtn.disabled = false;
+        rsvpBtn.style.opacity = '1';
+      }
+    }
+
     async function openRSVPModal(id) {
       const event = events.find(e => e.id === id);
       const attendees = Array.isArray(event.attendees) ? event.attendees : [];
@@ -602,7 +624,10 @@
           </div>
           <div class="form-field">
             <label>Your Email</label>
-            <input type="email" id="rsvpEmail" required>
+            <input type="email" id="rsvpEmail" required oninput="checkDuplicateEmail(${id}, this.value)">
+            <div id="emailWarning" style="color:#FFC107;font-size:12px;margin-top:4px;display:none;">
+              ⚠️ This email is already registered for this event
+            </div>
           </div>
           <button type="submit" class="btn" style="width:100%;" id="rsvpBtn">✅ Confirm RSVP & Get Shared Calendar Invite</button>
           <p style="font-size:12px;opacity:0.7;margin-top:12px;text-align:center;">
@@ -620,8 +645,20 @@
       rsvpBtn.disabled = true;
       rsvpBtn.textContent = 'Submitting...';
 
-      const name = document.getElementById('rsvpName').value;
-      const email = document.getElementById('rsvpEmail').value;
+      const name = document.getElementById('rsvpName').value.trim();
+      const email = document.getElementById('rsvpEmail').value.trim().toLowerCase();
+
+      // Client-side duplicate check
+      const event = events.find(ev => ev.id === eventId);
+      const attendees = Array.isArray(event.attendees) ? event.attendees : [];
+      const alreadyRegistered = attendees.some(a => a.email.toLowerCase() === email);
+
+      if (alreadyRegistered) {
+        showToast('You have already RSVP\'d to this event!', true);
+        rsvpBtn.disabled = false;
+        rsvpBtn.textContent = '✅ Confirm RSVP & Get Shared Calendar Invite';
+        return;
+      }
 
       try {
         const response = await fetch(`${API_BASE}/api/events/${eventId}/attendees`, {
