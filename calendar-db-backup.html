@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Salesforce UKI Social Calendar 2026</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, #032D60 0%, #0B5CAB 50%, #0D9DDA 100%);
+      background-attachment: fixed;
+      color: white;
+      min-height: 100vh;
+    }
+
+    .header {
+      background: rgba(3, 45, 96, 0.95);
+      backdrop-filter: blur(10px);
+      padding: 20px 40px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .header-content {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    h1 { font-size: 28px; font-weight: 800; }
+
+    .sync-indicator {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      padding: 8px 16px;
+      background: rgba(76, 175, 80, 0.2);
+      border: 1px solid #4CAF50;
+      border-radius: 20px;
+    }
+
+    .sync-indicator.syncing { background: rgba(255, 193, 7, 0.2); border-color: #FFC107; }
+    .sync-indicator.offline { background: rgba(244, 67, 54, 0.2); border-color: #f44336; }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 40px;
+    }
+
+    .hero {
+      text-align: center;
+      padding: 60px 20px;
+      margin-bottom: 40px;
+    }
+
+    .hero h2 { font-size: 48px; margin-bottom: 16px; }
+    .hero p { font-size: 20px; opacity: 0.9; }
+
+    .add-event-section {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 30px;
+      border-radius: 16px;
+      margin-bottom: 40px;
+    }
+
+    .btn {
+      background: #0D9DDA;
+      color: white;
+      border: none;
+      padding: 14px 28px;
+      border-radius: 8px;
+      font-weight: 700;
+      cursor: pointer;
+      font-size: 15px;
+      transition: all 0.3s;
+    }
+
+    .btn:hover {
+      background: #0B827C;
+      transform: translateY(-2px);
+    }
+
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .events-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+      gap: 24px;
+      margin-top: 40px;
+    }
+
+    .event-card {
+      background: rgba(26, 26, 26, 0.6);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      padding: 24px;
+      transition: all 0.3s;
+      cursor: pointer;
+    }
+
+    .event-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 32px rgba(13, 157, 218, 0.3);
+      border-color: #0D9DDA;
+    }
+
+    .event-title {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+
+    .event-detail {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+      font-size: 14px;
+      opacity: 0.8;
+    }
+
+    .event-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .btn-small {
+      padding: 8px 16px;
+      font-size: 13px;
+      flex: 1;
+    }
+
+    .btn-danger {
+      background: #dc2626;
+    }
+
+    .btn-danger:hover {
+      background: #b91c1c;
+    }
+
+    .attendees {
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      font-size: 13px;
+    }
+
+    .attendee-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 8px;
+    }
+
+    .attendee-badge {
+      background: rgba(13, 157, 218, 0.2);
+      border: 1px solid rgba(13, 157, 218, 0.4);
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 11px;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.8);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal.active { display: flex; }
+
+    .modal-content {
+      background: linear-gradient(135deg, #032D60, #0B5CAB);
+      border: 2px solid #0D9DDA;
+      border-radius: 20px;
+      padding: 40px;
+      max-width: 600px;
+      width: 90%;
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+
+    .modal-close {
+      float: right;
+      background: rgba(255, 255, 255, 0.1);
+      border: none;
+      color: white;
+      font-size: 24px;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      cursor: pointer;
+    }
+
+    .form-field {
+      margin-bottom: 16px;
+    }
+
+    .form-field label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .form-field input,
+    .form-field textarea,
+    .form-field select {
+      width: 100%;
+      padding: 12px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 8px;
+      color: white;
+      font-size: 14px;
+      font-family: inherit;
+    }
+
+    .form-field textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+
+    ::placeholder { color: rgba(255, 255, 255, 0.5); }
+
+    select option {
+      background: #032D60;
+      color: white;
+    }
+
+    .success-message {
+      text-align: center;
+      padding: 40px 20px;
+    }
+
+    .success-icon {
+      font-size: 64px;
+      margin-bottom: 20px;
+    }
+
+    .calendar-link {
+      display: inline-block;
+      margin-top: 24px;
+      padding: 14px 32px;
+      background: #0D9DDA;
+      color: white;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: 700;
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: #4CAF50;
+      color: white;
+      padding: 16px 24px;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.3s;
+      z-index: 2000;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .toast.error {
+      background: #f44336;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 60px;
+      font-size: 18px;
+      opacity: 0.7;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <div class="header-content">
+      <div>
+        <h1>🎉 UKI Social Calendar 2026</h1>
+        <div style="font-size:12px;opacity:0.7;margin-top:4px;">📍 Heron Tower & Around • 80 Team Members</div>
+      </div>
+      <div class="sync-indicator" id="syncStatus">
+        <span class="material-icons" style="font-size:16px;">cloud</span>
+        <span id="syncText">Connected</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="hero">
+      <h2>Let's Connect & Celebrate Together</h2>
+      <p>Your complete guide to team events throughout 2026 • Shared with the entire team</p>
+    </div>
+
+    <div class="add-event-section">
+      <button class="btn" onclick="openAddModal()">
+        <span class="material-icons" style="vertical-align:middle;margin-right:8px;">add</span>
+        Add New Event
+      </button>
+    </div>
+
+    <div id="loadingIndicator" class="loading">
+      <div>🔄 Loading events...</div>
+    </div>
+
+    <div class="events-grid" id="eventsGrid" style="display:none;"></div>
+  </div>
+
+  <!-- Add/Edit Modal -->
+  <div class="modal" id="eventModal">
+    <div class="modal-content">
+      <button class="modal-close" onclick="closeModal()">×</button>
+      <h3 id="modalTitle" style="margin-bottom:24px;font-size:24px;">Add Event</h3>
+      <form id="eventForm" onsubmit="saveEvent(event)">
+        <div class="form-field">
+          <label>Event Title (include emoji)</label>
+          <input type="text" id="title" required placeholder="🎉 Team Party">
+        </div>
+        <div class="form-field">
+          <label>Date</label>
+          <input type="date" id="date" required>
+        </div>
+        <div class="form-field">
+          <label>Time</label>
+          <input type="text" id="time" required placeholder="6:00 PM - 9:00 PM">
+        </div>
+        <div class="form-field">
+          <label>Location</label>
+          <input type="text" id="location" required placeholder="Heron Tower">
+        </div>
+        <div class="form-field">
+          <label>Description</label>
+          <textarea id="description" required></textarea>
+        </div>
+        <div class="form-field">
+          <label>Budget</label>
+          <input type="text" id="budget" required placeholder="£30 per person">
+        </div>
+        <button type="submit" class="btn" style="width:100%;margin-top:16px;" id="saveBtn">Save Event</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- RSVP Modal -->
+  <div class="modal" id="rsvpModal">
+    <div class="modal-content" id="rsvpContent"></div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    // API base URL
+    const API_BASE = window.location.origin;
+
+    let events = [];
+    let editingId = null;
+    let pollingInterval = null;
+
+    // Check API health
+    async function checkHealth() {
+      try {
+        const response = await fetch(`${API_BASE}/api/health`);
+        const data = await response.json();
+        updateSyncStatus(data.status === 'ok');
+        return data.status === 'ok';
+      } catch (err) {
+        updateSyncStatus(false);
+        return false;
+      }
+    }
+
+    // Update sync indicator
+    function updateSyncStatus(isConnected) {
+      const status = document.getElementById('syncStatus');
+      const text = document.getElementById('syncText');
+      if (isConnected) {
+        status.className = 'sync-indicator';
+        text.textContent = 'Connected';
+      } else {
+        status.className = 'sync-indicator offline';
+        text.textContent = 'Offline';
+      }
+    }
+
+    // Load events from API
+    async function loadEvents() {
+      try {
+        const response = await fetch(`${API_BASE}/api/events`);
+        if (!response.ok) throw new Error('Failed to load events');
+
+        events = await response.json();
+
+        document.getElementById('loadingIndicator').style.display = 'none';
+        document.getElementById('eventsGrid').style.display = 'grid';
+        renderEvents();
+      } catch (err) {
+        console.error('Load events error:', err);
+        showToast('Failed to load events: ' + err.message, true);
+      }
+    }
+
+    function renderEvents() {
+      const grid = document.getElementById('eventsGrid');
+
+      if (events.length === 0) {
+        grid.innerHTML = '<div class="loading">No events yet. Add the first one!</div>';
+        return;
+      }
+
+      grid.innerHTML = events.sort((a, b) => new Date(a.date) - new Date(b.date)).map(event => {
+        const attendees = Array.isArray(event.attendees) ? event.attendees : [];
+        return `
+        <div class="event-card">
+          <div class="event-title">${event.title}</div>
+          <div class="event-detail">
+            <span class="material-icons" style="font-size:18px;">calendar_today</span>
+            ${formatDate(event.date)} - ${event.time}
+          </div>
+          <div class="event-detail">
+            <span class="material-icons" style="font-size:18px;">place</span>
+            ${event.location}
+          </div>
+          <div class="event-detail">
+            <span class="material-icons" style="font-size:18px;">payments</span>
+            ${event.budget}
+          </div>
+          <div class="attendees">
+            <strong>👥 ${attendees.length} attending</strong>
+            ${attendees.length > 0 ? `
+              <div class="attendee-list">
+                ${attendees.slice(0, 5).map(a =>
+                  `<div class="attendee-badge">${a.name}</div>`
+                ).join('')}
+                ${attendees.length > 5 ? `<div class="attendee-badge">+${attendees.length - 5} more</div>` : ''}
+              </div>
+            ` : ''}
+          </div>
+          <div class="event-actions">
+            <button class="btn btn-small" onclick="openRSVPModal(${event.id})">RSVP</button>
+            <button class="btn btn-small" onclick="editEvent(${event.id})">Edit</button>
+            <button class="btn btn-small btn-danger" onclick="deleteEvent(${event.id})">Delete</button>
+          </div>
+        </div>
+      `;
+      }).join('');
+    }
+
+    function formatDate(dateStr) {
+      // Parse date as local time, not UTC
+      const [year, month, day] = dateStr.split('-');
+      const date = new Date(year, month - 1, day);
+      return date.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+    }
+
+    function openAddModal() {
+      editingId = null;
+      document.getElementById('modalTitle').textContent = 'Add New Event';
+      document.getElementById('eventForm').reset();
+      document.getElementById('eventModal').classList.add('active');
+    }
+
+    function editEvent(id) {
+      editingId = id;
+      const event = events.find(e => e.id === id);
+      document.getElementById('modalTitle').textContent = 'Edit Event';
+      document.getElementById('title').value = event.title;
+      document.getElementById('date').value = event.date;
+      document.getElementById('time').value = event.time;
+      document.getElementById('location').value = event.location;
+      document.getElementById('description').value = event.description;
+      document.getElementById('budget').value = event.budget;
+      document.getElementById('eventModal').classList.add('active');
+    }
+
+    async function saveEvent(e) {
+      e.preventDefault();
+      const saveBtn = document.getElementById('saveBtn');
+      saveBtn.disabled = true;
+      saveBtn.textContent = 'Saving...';
+
+      const eventData = {
+        title: document.getElementById('title').value,
+        date: document.getElementById('date').value,
+        time: document.getElementById('time').value,
+        location: document.getElementById('location').value,
+        description: document.getElementById('description').value,
+        budget: document.getElementById('budget').value
+      };
+
+      try {
+        let response;
+        if (editingId) {
+          response = await fetch(`${API_BASE}/api/events/${editingId}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(eventData)
+          });
+        } else {
+          response = await fetch(`${API_BASE}/api/events`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(eventData)
+          });
+        }
+
+        if (!response.ok) throw new Error('Failed to save event');
+
+        showToast(editingId ? 'Event updated!' : 'Event added!');
+        closeModal();
+        await loadEvents();
+      } catch (err) {
+        console.error('Save event error:', err);
+        showToast('Failed to save event: ' + err.message, true);
+      } finally {
+        saveBtn.disabled = false;
+        saveBtn.textContent = 'Save Event';
+      }
+    }
+
+    async function deleteEvent(id) {
+      if (!confirm('Delete this event?')) return;
+
+      try {
+        const response = await fetch(`${API_BASE}/api/events/${id}`, {
+          method: 'DELETE'
+        });
+
+        if (!response.ok) throw new Error('Failed to delete event');
+
+        showToast('Event deleted');
+        await loadEvents();
+      } catch (err) {
+        console.error('Delete event error:', err);
+        showToast('Failed to delete event: ' + err.message, true);
+      }
+    }
+
+    async function removeAttendee(eventId, attendeeId, attendeeName) {
+      if (!confirm(`Remove ${attendeeName} from this event?`)) {
+        return;
+      }
+
+      try {
+        const response = await fetch(`${API_BASE}/api/events/${eventId}/attendees/${attendeeId}`, {
+          method: 'DELETE'
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to remove attendee');
+        }
+
+        // Refresh the event list
+        await loadEvents();
+
+        // Reopen the modal with updated attendee list
+        openRSVPModal(eventId);
+
+        showToast(`${attendeeName} has been removed from the event`);
+      } catch (err) {
+        console.error('Remove attendee error:', err);
+        showToast('Failed to remove attendee: ' + err.message, true);
+      }
+    }
+
+    function checkDuplicateEmail(eventId, email) {
+      const emailTrimmed = email.trim().toLowerCase();
+      const event = events.find(e => e.id === eventId);
+      const attendees = Array.isArray(event.attendees) ? event.attendees : [];
+      const warning = document.getElementById('emailWarning');
+      const rsvpBtn = document.getElementById('rsvpBtn');
+
+      const isDuplicate = attendees.some(a => a.email.toLowerCase() === emailTrimmed);
+
+      if (isDuplicate && emailTrimmed.length > 0) {
+        warning.style.display = 'block';
+        rsvpBtn.disabled = true;
+        rsvpBtn.style.opacity = '0.5';
+      } else {
+        warning.style.display = 'none';
+        rsvpBtn.disabled = false;
+        rsvpBtn.style.opacity = '1';
+      }
+    }
+
+    async function openRSVPModal(id) {
+      const event = events.find(e => e.id === id);
+      const attendees = Array.isArray(event.attendees) ? event.attendees : [];
+      const content = document.getElementById('rsvpContent');
+
+      content.innerHTML = `
+        <button class="modal-close" onclick="closeRSVPModal()">×</button>
+        <h3 style="margin-bottom:24px;font-size:24px;">${event.title}</h3>
+
+        <div style="margin-bottom:24px;">
+          <div style="margin-bottom:12px;">📅 ${formatDate(event.date)} - ${event.time}</div>
+          <div style="margin-bottom:12px;">📍 ${event.location}</div>
+          <div style="margin-bottom:12px;">${event.description}</div>
+        </div>
+
+        <div style="margin-bottom:24px;padding:16px;background:rgba(255,255,255,0.1);border-radius:8px;">
+          <strong>👥 Attendees (${attendees.length})</strong>
+          ${attendees.length > 0 ?
+            '<div style="margin-top:12px;max-height:200px;overflow-y:auto;">' + attendees.map(a =>
+              `<div style="padding:8px;margin-top:4px;background:rgba(255,255,255,0.05);border-radius:4px;display:flex;justify-content:space-between;align-items:center;">
+                <div>
+                  ${a.name} <span style="opacity:0.6;font-size:12px;">(${a.email})</span>
+                </div>
+                <button onclick="removeAttendee(${id}, ${a.id}, '${a.name}')" style="background:#dc2626;border:none;color:white;padding:4px 12px;border-radius:4px;cursor:pointer;font-size:11px;font-weight:600;" title="Remove ${a.name}">
+                  Remove
+                </button>
+              </div>`
+            ).join('') + '</div>'
+            : '<p style="opacity:0.6;margin-top:8px;">No RSVPs yet. Be the first!</p>'
+          }
+        </div>
+
+        <form onsubmit="submitRSVP(event, ${id})">
+          <div class="form-field">
+            <label>Your Name</label>
+            <input type="text" id="rsvpName" required>
+          </div>
+          <div class="form-field">
+            <label>Your Email</label>
+            <input type="email" id="rsvpEmail" required oninput="checkDuplicateEmail(${id}, this.value)">
+            <div id="emailWarning" style="color:#FFC107;font-size:12px;margin-top:4px;display:none;">
+              ⚠️ This email is already registered for this event
+            </div>
+          </div>
+          <button type="submit" class="btn" style="width:100%;" id="rsvpBtn">✅ Confirm RSVP & Get Shared Calendar Invite</button>
+          <p style="font-size:12px;opacity:0.7;margin-top:12px;text-align:center;">
+            You'll be added to a shared meeting with all other attendees
+          </p>
+        </form>
+      `;
+
+      document.getElementById('rsvpModal').classList.add('active');
+    }
+
+    async function submitRSVP(e, eventId) {
+      e.preventDefault();
+      const rsvpBtn = document.getElementById('rsvpBtn');
+      rsvpBtn.disabled = true;
+      rsvpBtn.textContent = 'Submitting...';
+
+      const name = document.getElementById('rsvpName').value.trim();
+      const email = document.getElementById('rsvpEmail').value.trim().toLowerCase();
+
+      // Client-side duplicate check
+      const event = events.find(ev => ev.id === eventId);
+      const attendees = Array.isArray(event.attendees) ? event.attendees : [];
+      const alreadyRegistered = attendees.some(a => a.email.toLowerCase() === email);
+
+      if (alreadyRegistered) {
+        showToast('You have already RSVP\'d to this event!', true);
+        rsvpBtn.disabled = false;
+        rsvpBtn.textContent = '✅ Confirm RSVP & Get Shared Calendar Invite';
+        return;
+      }
+
+      try {
+        const response = await fetch(`${API_BASE}/api/events/${eventId}/attendees`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, email })
+        });
+
+        if (!response.ok) {
+          const error = await response.json();
+          throw new Error(error.error || 'Failed to RSVP');
+        }
+
+        const data = await response.json();
+        const allAttendees = data.allAttendees;
+
+        // Refresh events
+        await loadEvents();
+
+        // Get updated event
+        const event = events.find(e => e.id === eventId);
+
+        // Generate shared calendar link
+        const calLink = generateSharedCalendarLink(event, allAttendees);
+
+        // Find the current user's attendee record
+        const currentUserAttendee = allAttendees.find(a => a.email.toLowerCase() === email.toLowerCase());
+
+        // Show success
+        document.getElementById('rsvpContent').innerHTML = `
+          <button class="modal-close" onclick="closeRSVPModal()">×</button>
+          <div class="success-message">
+            <div class="success-icon">✅</div>
+            <h3 style="font-size:28px;margin-bottom:16px;">You're all set!</h3>
+            <p style="opacity:0.9;margin-bottom:16px;">RSVP confirmed for <strong>${event.title}</strong></p>
+            <div style="background:rgba(255,255,255,0.1);padding:16px;border-radius:8px;margin-bottom:24px;">
+              <strong>📋 Meeting includes ${allAttendees.length} people:</strong>
+              <div style="max-height:150px;overflow-y:auto;margin-top:12px;">
+                ${allAttendees.map(a => `<div style="font-size:13px;padding:4px;">${a.name}</div>`).join('')}
+              </div>
+            </div>
+            <a href="${calLink}" target="_blank" class="calendar-link">
+              📅 Add Shared Meeting to Google Calendar
+            </a>
+            <p style="margin-top:24px;font-size:13px;opacity:0.7;">
+              This calendar invite includes all attendees. Everyone who RSVPs will see the same list.
+            </p>
+            ${currentUserAttendee ? `
+              <button onclick="removeAttendee(${eventId}, ${currentUserAttendee.id}, '${name}')" style="margin-top:16px;background:rgba(220,38,38,0.2);border:1px solid #dc2626;color:#dc2626;padding:10px 20px;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600;">
+                Changed your mind? Remove my RSVP
+              </button>
+            ` : ''}
+          </div>
+        `;
+
+        showToast('RSVP confirmed! You\'re added to the shared meeting.');
+      } catch (err) {
+        console.error('RSVP error:', err);
+        showToast(err.message, true);
+        rsvpBtn.disabled = false;
+        rsvpBtn.textContent = '✅ Confirm RSVP & Get Shared Calendar Invite';
+      }
+    }
+
+    function generateSharedCalendarLink(event, attendees) {
+      const title = encodeURIComponent(event.title);
+      const attendeeList = attendees.map(a => `${a.name} (${a.email})`).join('\\n');
+      const details = encodeURIComponent(
+        event.description +
+        '\\n\\nLocation: ' + event.location +
+        '\\n\\n📋 ATTENDEES (' + attendees.length + '):' +
+        '\\n' + attendeeList
+      );
+
+      const location = encodeURIComponent(event.location);
+      const dateStr = event.date.replace(/-/g, '');
+
+      // Parse event time and convert to Google Calendar format
+      let dates;
+      const timeStr = event.time.toLowerCase();
+
+      // Try to extract start time from formats like "6:00 PM", "18:00", "6 PM - 9 PM", etc.
+      const timeMatch = timeStr.match(/(\d{1,2}):?(\d{2})?\s*(am|pm)?/i);
+
+      if (timeMatch) {
+        let hours = parseInt(timeMatch[1]);
+        let minutes = timeMatch[2] ? parseInt(timeMatch[2]) : 0;
+        const meridiem = timeMatch[3] ? timeMatch[3].toLowerCase() : '';
+
+        // Convert to 24-hour format
+        if (meridiem === 'pm' && hours !== 12) {
+          hours += 12;
+        } else if (meridiem === 'am' && hours === 12) {
+          hours = 0;
+        }
+
+        // Convert UK time (BST/GMT) to UTC
+        // BST is UTC+1 (summer), GMT is UTC+0 (winter)
+        // For simplicity, we'll assume BST (subtract 1 hour)
+        const utcHours = (hours - 1 + 24) % 24;
+
+        // Format as Google Calendar time (YYYYMMDDTHHMMSSZ)
+        const startTime = `${dateStr}T${String(utcHours).padStart(2, '0')}${String(minutes).padStart(2, '0')}00Z`;
+
+        // Default to 3 hours duration if no end time specified
+        const endHours = (utcHours + 3) % 24;
+        const endTime = `${dateStr}T${String(endHours).padStart(2, '0')}${String(minutes).padStart(2, '0')}00Z`;
+
+        dates = `${startTime}/${endTime}`;
+      } else {
+        // Fallback: all-day event if we can't parse the time
+        dates = dateStr;
+      }
+
+      const add = encodeURIComponent(attendees.map(a => a.email).join(','));
+
+      return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&details=${details}&location=${location}&dates=${dates}&add=${add}`;
+    }
+
+    function closeModal() {
+      document.getElementById('eventModal').classList.remove('active');
+    }
+
+    function closeRSVPModal() {
+      document.getElementById('rsvpModal').classList.remove('active');
+    }
+
+    function showToast(message, isError = false) {
+      const toast = document.getElementById('toast');
+      toast.textContent = message;
+      toast.className = 'toast' + (isError ? ' error' : '');
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 3000);
+    }
+
+    // Close modals on outside click
+    document.querySelectorAll('.modal').forEach(modal => {
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+          modal.classList.remove('active');
+        }
+      });
+    });
+
+    // Auto-refresh events every 10 seconds
+    function startPolling() {
+      pollingInterval = setInterval(() => {
+        loadEvents();
+      }, 10000);
+    }
+
+    // Initialize
+    async function init() {
+      await checkHealth();
+      await loadEvents();
+      startPolling();
+      console.log('✅ Social Calendar Ready with PostgreSQL!');
+    }
+
+    init();
+  </script>
+
+</body>
+</html>

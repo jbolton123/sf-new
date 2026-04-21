@@ -26,6 +26,7 @@ async function initDatabase() {
         location VARCHAR(255) NOT NULL,
         description TEXT,
         budget VARCHAR(100),
+        category VARCHAR(50) DEFAULT 'social',
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       );
@@ -101,13 +102,13 @@ app.get('/api/events/:id', async (req, res) => {
 // Create new event
 app.post('/api/events', async (req, res) => {
   try {
-    const { title, date, time, location, description, budget } = req.body;
+    const { title, date, time, location, description, budget, category } = req.body;
 
     const result = await pool.query(`
-      INSERT INTO events (title, date, time, location, description, budget)
-      VALUES ($1, $2, $3, $4, $5, $6)
+      INSERT INTO events (title, date, time, location, description, budget, category)
+      VALUES ($1, $2, $3, $4, $5, $6, $7)
       RETURNING *
-    `, [title, date, time, location, description, budget]);
+    `, [title, date, time, location, description, budget, category || 'social']);
 
     const event = result.rows[0];
     event.attendees = [];
@@ -123,14 +124,14 @@ app.post('/api/events', async (req, res) => {
 app.put('/api/events/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    const { title, date, time, location, description, budget } = req.body;
+    const { title, date, time, location, description, budget, category } = req.body;
 
     const result = await pool.query(`
       UPDATE events
-      SET title = $1, date = $2, time = $3, location = $4, description = $5, budget = $6, updated_at = CURRENT_TIMESTAMP
-      WHERE id = $7
+      SET title = $1, date = $2, time = $3, location = $4, description = $5, budget = $6, category = $7, updated_at = CURRENT_TIMESTAMP
+      WHERE id = $8
       RETURNING *
-    `, [title, date, time, location, description, budget, id]);
+    `, [title, date, time, location, description, budget, category || 'social', id]);
 
     if (result.rows.length === 0) {
       return res.status(404).json({ error: 'Event not found' });
