@@ -570,6 +570,33 @@
       }
     }
 
+    async function removeAttendee(eventId, attendeeId, attendeeName) {
+      if (!confirm(`Remove ${attendeeName} from this event?`)) {
+        return;
+      }
+
+      try {
+        const response = await fetch(`${API_BASE}/api/events/${eventId}/attendees/${attendeeId}`, {
+          method: 'DELETE'
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to remove attendee');
+        }
+
+        // Refresh the event list
+        await loadEvents();
+
+        // Reopen the modal with updated attendee list
+        openRSVPModal(eventId);
+
+        showToast(`${attendeeName} has been removed from the event`);
+      } catch (err) {
+        console.error('Remove attendee error:', err);
+        showToast('Failed to remove attendee: ' + err.message, true);
+      }
+    }
+
     function checkDuplicateEmail(eventId, email) {
       const emailTrimmed = email.trim().toLowerCase();
       const event = events.find(e => e.id === eventId);
@@ -609,8 +636,13 @@
           <strong>👥 Attendees (${attendees.length})</strong>
           ${attendees.length > 0 ?
             '<div style="margin-top:12px;max-height:200px;overflow-y:auto;">' + attendees.map(a =>
-              `<div style="padding:8px;margin-top:4px;background:rgba(255,255,255,0.05);border-radius:4px;">
-                ${a.name} <span style="opacity:0.6;font-size:12px;">(${a.email})</span>
+              `<div style="padding:8px;margin-top:4px;background:rgba(255,255,255,0.05);border-radius:4px;display:flex;justify-content:space-between;align-items:center;">
+                <div>
+                  ${a.name} <span style="opacity:0.6;font-size:12px;">(${a.email})</span>
+                </div>
+                <button onclick="removeAttendee(${id}, ${a.id}, '${a.name}')" style="background:#dc2626;border:none;color:white;padding:4px 12px;border-radius:4px;cursor:pointer;font-size:11px;font-weight:600;" title="Remove ${a.name}">
+                  Remove
+                </button>
               </div>`
             ).join('') + '</div>'
             : '<p style="opacity:0.6;margin-top:8px;">No RSVPs yet. Be the first!</p>'
@@ -684,6 +716,9 @@
         // Generate shared calendar link
         const calLink = generateSharedCalendarLink(event, allAttendees);
 
+        // Find the current user's attendee record
+        const currentUserAttendee = allAttendees.find(a => a.email.toLowerCase() === email.toLowerCase());
+
         // Show success
         document.getElementById('rsvpContent').innerHTML = `
           <button class="modal-close" onclick="closeRSVPModal()">×</button>
@@ -703,6 +738,11 @@
             <p style="margin-top:24px;font-size:13px;opacity:0.7;">
               This calendar invite includes all attendees. Everyone who RSVPs will see the same list.
             </p>
+            ${currentUserAttendee ? `
+              <button onclick="removeAttendee(${eventId}, ${currentUserAttendee.id}, '${name}')" style="margin-top:16px;background:rgba(220,38,38,0.2);border:1px solid #dc2626;color:#dc2626;padding:10px 20px;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600;">
+                Changed your mind? Remove my RSVP
+              </button>
+            ` : ''}
           </div>
         `;
 

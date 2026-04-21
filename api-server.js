@@ -202,6 +202,38 @@ app.post('/api/events/:id/attendees', async (req, res) => {
   }
 });
 
+// Remove attendee from event
+app.delete('/api/events/:eventId/attendees/:attendeeId', async (req, res) => {
+  try {
+    const { eventId, attendeeId } = req.params;
+
+    // Delete attendee
+    const result = await pool.query(
+      'DELETE FROM attendees WHERE id = $1 AND event_id = $2 RETURNING *',
+      [attendeeId, eventId]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: 'Attendee not found' });
+    }
+
+    // Get remaining attendees
+    const attendees = await pool.query(
+      'SELECT id, name, email, created_at as timestamp FROM attendees WHERE event_id = $1 ORDER BY created_at ASC',
+      [eventId]
+    );
+
+    res.json({
+      message: 'Attendee removed',
+      removedAttendee: result.rows[0],
+      remainingAttendees: attendees.rows
+    });
+  } catch (err) {
+    console.error('Remove attendee error:', err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // Serve main calendar page
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'calendar-db.html'));
